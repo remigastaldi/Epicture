@@ -1,10 +1,13 @@
 package org.putraxor.instagram
 
+import android.content.Context
+import android.os.Environment
 import khttp.responses.Response
 import org.json.JSONObject
+import java.io.File
 
 
-object Instagram {
+class Instagram(private var context: Context) {
     var username: String = "uname"
     var password: String = "pass"
     var deviceId: String = "xxxx"
@@ -14,14 +17,15 @@ object Instagram {
     var token: String = "-"
     var rankToken: String = "-"
     var Req = Request()
-    var cookiePersistor = CookiePersistor("")
+    val file = File(Environment.getExternalStorageDirectory(), username)
+    var cookiePersistor = CookiePersistor(file.path)
 
 
     /**
      * Prepare Instagram API
      */
     fun prepare() {
-        deviceId = Crypto.generateDeviceId(username)
+        deviceId = Crypto.generateDeviceId(file.path)
         uuid = Crypto.randomUUID(true)
         cookiePersistor = CookiePersistor(username)
         if (cookiePersistor.exist()) {

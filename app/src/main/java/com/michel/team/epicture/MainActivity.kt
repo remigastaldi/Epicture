@@ -16,7 +16,8 @@ class MainActivity : AppCompatActivity() {
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
 
         StrictMode.setThreadPolicy(policy)
-        var ig = Instagram
+
+        var ig = Instagram(this)
         ig.username = "pratulisian"
         ig.password = "qwertypoi"
         ig.prepare()
