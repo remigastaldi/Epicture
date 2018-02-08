@@ -1,4 +1,4 @@
-package org.putraxor.instagram
+package com.michel.team.epicture
 
 import khttp.structures.cookie.Cookie
 import khttp.structures.cookie.CookieJar

@@ -1,4 +1,4 @@
-package org.putraxor.instagram
+package com.michel.team.epicture
 
 import khttp.get
 import khttp.post

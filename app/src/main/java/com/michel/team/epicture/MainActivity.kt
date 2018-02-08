@@ -2,7 +2,6 @@ package com.michel.team.epicture
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import org.putraxor.instagram.Instagram
 import android.os.StrictMode
 
 
