@@ -109,4 +109,7 @@ class Instagram(private var context: Context) {
         return Req.prepare(Routes.recetActivity()).send()
     }
 
+    fun getUserFeed(): Response {
+        return Req.prepare(Routes.userFeed(ds_user_id, "", ds_user_id)).send()
+    }
 }

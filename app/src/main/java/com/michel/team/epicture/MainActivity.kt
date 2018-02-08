@@ -3,7 +3,9 @@ package com.michel.team.epicture
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.StrictMode
-
+import android.util.Log
+import android.widget.TextView
+import java.io.File
 
 
 class MainActivity : AppCompatActivity() {
@@ -21,6 +23,19 @@ class MainActivity : AppCompatActivity() {
         ig.password = "epitech42"
         ig.prepare()
         ig.login()
+
+        var response = ig.getUserFeed()
+
+        var text = this.findViewById<TextView>(R.id.text_view)
+
+        text.text = response.text
+
+        val file = File(this.filesDir, "log.txt")
+
+        file.printWriter().use {out ->
+            out.println(response.text)
+        }
+        Log.v("MainActivity", response.text)
     }
 
 }
