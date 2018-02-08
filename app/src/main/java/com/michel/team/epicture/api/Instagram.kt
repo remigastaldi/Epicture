@@ -17,17 +17,17 @@ class Instagram(private var context: Context) {
     var token: String = "-"
     var rankToken: String = "-"
     var Req = Request()
-    val file = File(Environment.getExternalStorageDirectory(), username)
-    var cookiePersistor = CookiePersistor(file.path)
+    var cookiePersistor = CookiePersistor("")
 
 
     /**
      * Prepare Instagram API
      */
     fun prepare() {
-        deviceId = Crypto.generateDeviceId(file.path)
+        val file = File(context.filesDir, username)
+        deviceId = Crypto.generateDeviceId(file.absolutePath)
         uuid = Crypto.randomUUID(true)
-        cookiePersistor = CookiePersistor(username)
+        cookiePersistor = CookiePersistor(file.absolutePath)
         if (cookiePersistor.exist()) {
             val cookieDisk = cookiePersistor.load()
             val account = JSONObject(cookieDisk.account)
