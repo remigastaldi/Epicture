@@ -17,8 +17,8 @@ class MainActivity : AppCompatActivity() {
         StrictMode.setThreadPolicy(policy)
 
         var ig = Instagram(this)
-        ig.username = "pratulisian"
-        ig.password = "qwertypoi"
+        ig.username = "epicture42"
+        ig.password = "epitech42"
         ig.prepare()
         ig.login()
     }
