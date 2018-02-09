@@ -14,4 +14,7 @@
     <string name="comment">Comment</string>
     <string name="image">Image</string>
     <string name="like_button_feed">like_button_feed</string>
+    <string name="home_button_action_bar_main">home_button_action_bar_main</string>
+    <string name="profil_button_action_bar_main">profil_button_action_bar_main </string>
+    <string name="add_button_action_bar_main">add_button_action_bar_main</string>
 </resources>
