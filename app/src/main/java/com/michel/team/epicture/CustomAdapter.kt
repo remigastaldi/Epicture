@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.squareup.picasso.Picasso
 
 /**
  * Created by puccio_c on 2/9/18.
@@ -36,9 +37,11 @@ import android.widget.TextView
         }
         override fun onBindViewHolder(holder : CustomAdapter.ViewHolder, position : Int){
             var feed : Feed = list.get(position)
-            holder.titleTextView.text = feed.name
-            holder.countTextView.text = feed.numOfSongs.toString()
-            holder.thumbImageView.setImageResource(feed.thumbnail)
+            holder.titleTextView.text = feed.name;
+            holder.countTextView.text = "${feed.numOfSongs} songs"
+//            holder.thumbImageView.setImageResource(feed.thumbnail);
+            Picasso.with(context).load(feed.thumbnail).into(holder.thumbImageView);
+
 //        holder.overflowImageView.setOnClickListener(object : View.OnClickListener{
 //            override fun onClick(view: View) {
 //                showPopupMenu(holder.overflowImageView)

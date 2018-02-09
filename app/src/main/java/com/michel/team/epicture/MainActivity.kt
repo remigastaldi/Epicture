@@ -13,6 +13,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import java.io.File
+import com.squareup.picasso.Picasso
 
 class MainActivity : AppCompatActivity() {
     private var instagram = InstagramApiContext.instagram
@@ -28,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         StrictMode.setThreadPolicy(policy)
 
-        
+
         var response = instagram?.getUserFeed()
 
 //        var text = this.findViewById<TextView>(R.id.text_view)
@@ -56,9 +57,9 @@ class MainActivity : AppCompatActivity() {
 
     }
     private fun prepareList(list : ArrayList<Feed>){
-        list.add(Feed("What isqsddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", 2, R.drawable.login_background))
-        list.add(Feed("No No", 2, R.drawable.login_background))
-        list.add(Feed("test", 2, R.drawable.login_background))
+        list.add(Feed("What is", 2, "https://picsum.photos/1000/800/?random"))
+        list.add(Feed("No No", 2, "https://picsum.photos/1920/1080/?random"))
+        list.add(Feed("test", 2, "https://picsum.photos/380/200/?random"))
     }
 
 
