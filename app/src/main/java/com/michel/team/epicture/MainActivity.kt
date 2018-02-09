@@ -22,16 +22,9 @@ class MainActivity : AppCompatActivity() {
         StrictMode.setThreadPolicy(policy)
 
 
-        /*if (!instagram.isLogin) {
-                  val intentMain = Intent(this@MainActivity,
-                          LoginActivity::class.java)
-                  this@MainActivity.startActivity(intentMain)
-              }*/ // TODO
+        val response = instagram?.getUserFeed()
 
-
-        var response = instagram?.getUserFeed()
-
-        var text = this.findViewById<TextView>(R.id.text_view)
+        val text = this.findViewById<TextView>(R.id.text_view)
 
         text.text = response?.text
 
@@ -52,7 +45,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
+        when (item.itemId) {
             R.id.logout_action -> {
                 instagram?.logout()
                 val intentMain = Intent(this@MainActivity,
