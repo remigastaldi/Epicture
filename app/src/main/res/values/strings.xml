@@ -13,4 +13,5 @@
     <string name="title">Title</string>
     <string name="comment">Comment</string>
     <string name="image">Image</string>
+    <string name="like_button_feed">like_button_feed</string>
 </resources>
