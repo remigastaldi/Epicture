@@ -92,6 +92,7 @@ class MainActivity : AppCompatActivity() {
         val dialog = builder.create()
 
         okButton.setOnClickListener {
+            dialog.dismiss()
             instagram?.logout()
             val intentMain = Intent(this@MainActivity,
                     LoginActivity::class.java)
