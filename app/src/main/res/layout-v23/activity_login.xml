@@ -100,5 +100,5 @@
         android:background="@drawable/user_circle"
         android:elevation="4dp"
         android:src="@drawable/user_profile"
-        android:contentDescription="@string/user_profile_photo" />
+        android:contentDescription="@string/user_profile_photo"/>
 </RelativeLayout>

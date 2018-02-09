@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.os.StrictMode
 import android.support.design.widget.TextInputEditText
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
 
 /**
@@ -13,6 +15,7 @@ import android.widget.Toast
  */
 class LoginActivity : AppCompatActivity() {
     private var instagram: Instagram? = null
+    private var hitcounter = 0;
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,10 +29,16 @@ class LoginActivity : AppCompatActivity() {
 
         StrictMode.setThreadPolicy(policy)
 
-        val btClickMe = findViewById<Button>(R.id.signInButton)
-        btClickMe.setOnClickListener {
+        val signInBtn = findViewById<Button>(R.id.signInButton)
+        signInBtn.setOnClickListener {
             signIn()
         }
+
+        val userProfileBtn = findViewById<ImageButton>(R.id.user_profile_photo)
+        userProfileBtn.setOnClickListener {
+            hilterization()
+        }
+
 
         instagram?.prepare()
         if (instagram!!.isLogin) {
@@ -58,5 +67,14 @@ class LoginActivity : AppCompatActivity() {
         }
         else
             Toast.makeText(this,"Invalid user or password" , Toast.LENGTH_LONG).show()
+    }
+
+    fun hilterization() {
+        hitcounter = hitcounter + 1;
+        if (hitcounter == 5) {
+            val btn = findViewById<ImageButton>(R.id.user_profile_photo);
+            btn.setImageResource(R.drawable.hilter)
+            println("Hilterization activated")
+        }
     }
 }
