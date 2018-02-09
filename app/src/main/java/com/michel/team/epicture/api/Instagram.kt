@@ -1,7 +1,6 @@
 package com.michel.team.epicture
 
 import android.content.Context
-import android.os.Environment
 import khttp.responses.Response
 import org.json.JSONObject
 import java.io.File
@@ -18,20 +17,21 @@ class Instagram(private var context: Context) {
     var rankToken: String = "-"
     var Req = Request()
     var cookiePersistor = CookiePersistor("")
+    private val cookieName = "epicture"
 
 
     /**
      * Prepare Instagram API
      */
     fun prepare() {
-        val file = File(context.filesDir, username)
+        val file = File(context.filesDir, cookieName)
         deviceId = Crypto.generateDeviceId(file.absolutePath)
         uuid = Crypto.randomUUID(true)
         cookiePersistor = CookiePersistor(file.absolutePath)
         if (cookiePersistor.exist()) {
             val cookieDisk = cookiePersistor.load()
             val account = JSONObject(cookieDisk.account)
-            if (account.getString("status").toLowerCase().equals("ok")) {
+            if (account.getString("status").toLowerCase() == "ok") {
                 println("Already login to Instagram")
                 val jar = cookieDisk.cookieJar
                 Req.persistedCookies = jar
@@ -48,8 +48,8 @@ class Instagram(private var context: Context) {
      */
     fun login(force: Boolean = false) {
         if (!isLogin || force) {
-            var payload = """{"_csrftoken":"missing","device_id":"$deviceId","_uuid":"$uuid","username":"$username","password":"$password","login_attempt_count":0}"""
-            var response = Req.prepare(Routes.login(), payload).send()
+            val payload = """{"_csrftoken":"missing","device_id":"$deviceId","_uuid":"$uuid","username":"$username","password":"$password","login_attempt_count":0}"""
+            val response = Req.prepare(Routes.login(), payload).send()
             cookiePersistor.save(response.text, response.cookies)
             println("Instagram.kt ${response.text}")
             println("Instagram.kt ${response.cookies.entries}")
