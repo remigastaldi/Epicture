@@ -16,7 +16,7 @@ class Request {
         url = "${HTTP.ENDPOINT}$reqUrl"
         //url = "http://localhost/cookies?fuck=${url}";
         data = jsonString
-        isGet = data?.isNullOrEmpty()
+        isGet = data.isNullOrEmpty()
         return this
     }
 

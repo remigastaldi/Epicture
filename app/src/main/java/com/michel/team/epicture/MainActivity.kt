@@ -7,6 +7,10 @@ import android.util.Log
 import android.widget.TextView
 import java.io.File
 import android.content.Intent
+import android.content.res.Configuration
+import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 
@@ -16,28 +20,47 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val list = ArrayList<Feed>();
+        prepareList(list);
+        val rView = findViewById(R.id.rView) as RecyclerView;
 
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
 
         StrictMode.setThreadPolicy(policy)
 
+        
+        var response = instagram?.getUserFeed()
 
-        val response = instagram?.getUserFeed()
+//        var text = this.findViewById<TextView>(R.id.text_view)
 
-        val text = this.findViewById<TextView>(R.id.text_view)
-
-        text.text = response?.text
+ //       text.text = response?.text
 
         val file = File(this.filesDir, "log.txt")
 
         file.printWriter().use {out ->
             out.println(response?.text)
         }
+        println(response?.text)
         Log.v("MainActivity", response?.text)
 
-
+        val adapter = CustomAdapter(this, list)
+        rView.adapter = adapter;
+        val orientation : Int = getResources().getConfiguration().orientation
+        rView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        if(orientation == Configuration.ORIENTATION_LANDSCAPE){
+            rView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        }
+        if(orientation == Configuration.ORIENTATION_PORTRAIT){
+            rView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        }
 
     }
+    private fun prepareList(list : ArrayList<Feed>){
+        list.add(Feed("What is", 2, R.drawable.login_background))
+        list.add(Feed("No No", 2, R.drawable.login_background))
+        list.add(Feed("test", 2, R.drawable.login_background))
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
