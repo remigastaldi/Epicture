@@ -11,7 +11,7 @@ import android.view.Menu
 import android.view.MenuItem
 
 class MainActivity : AppCompatActivity() {
-    val ig = Instagram(this)
+    private var instagram = InstagramApiContext.instagram
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,29 +21,26 @@ class MainActivity : AppCompatActivity() {
 
         StrictMode.setThreadPolicy(policy)
 
-        ig.username = "epicture42"
-        ig.password = "epitech42"
-        ig.prepare()
-        ig.login()
-        /*if (!ig.isLogin) {
+
+        /*if (!instagram.isLogin) {
                   val intentMain = Intent(this@MainActivity,
                           LoginActivity::class.java)
                   this@MainActivity.startActivity(intentMain)
               }*/ // TODO
 
 
-        var response = ig.getUserFeed()
+        var response = instagram?.getUserFeed()
 
         var text = this.findViewById<TextView>(R.id.text_view)
 
-        text.text = response.text
+        text.text = response?.text
 
         val file = File(this.filesDir, "log.txt")
 
         file.printWriter().use {out ->
-            out.println(response.text)
+            out.println(response?.text)
         }
-        Log.v("MainActivity", response.text)
+        Log.v("MainActivity", response?.text)
 
 
 
@@ -57,7 +54,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.getItemId()) {
             R.id.logout_action -> {
-                ig.logout()
+                instagram?.logout()
                 val intentMain = Intent(this@MainActivity,
                         LoginActivity::class.java)
                 this@MainActivity.startActivity(intentMain)
