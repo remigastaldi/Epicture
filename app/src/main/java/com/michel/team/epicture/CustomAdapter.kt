@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.squareup.picasso.Picasso
 
 /**
@@ -18,14 +19,10 @@ import com.squareup.picasso.Picasso
     class CustomAdapter(private val context : Context, private val list : List<Feed>) : RecyclerView.Adapter<CustomAdapter.ViewHolder>(){
 
         class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            var titleTextView: TextView = itemView.findViewById(R.id.comment_feed) as TextView
-            var countTextView: TextView = itemView.findViewById(R.id.like_counter) as TextView
-            var thumbImageView : ImageView = itemView.findViewById(R.id.image_feed) as ImageView
-            //var overflowImageView : ImageView
-
-            init {
-                //overflowImageView = itemView.findViewById(R.id.overflow) as ImageView
-            }
+            var titleTextView: TextView = itemView.findViewById(R.id.comment_feed)
+            var countTextView: TextView = itemView.findViewById(R.id.like_counter)
+            var thumbImageView : ImageView = itemView.findViewById(R.id.image_feed)
+            var favoriteImageView : ImageView = itemView.findViewById(R.id.like_button_feed)
         }
         override fun onCreateViewHolder(parent : ViewGroup, type : Int) : CustomAdapter.ViewHolder{
             val view : View = LayoutInflater.from(parent.context).inflate(R.layout.activity_feed, parent, false)
@@ -36,11 +33,15 @@ import com.squareup.picasso.Picasso
             return ViewHolder(view)
         }
         override fun onBindViewHolder(holder : CustomAdapter.ViewHolder, position : Int){
-            var feed : Feed = list.get(position)
+            var feed : Feed = list[position]
+
+            holder.favoriteImageView.setOnClickListener {
+                Toast.makeText(context, "OK", Toast.LENGTH_SHORT).show()
+            }
             holder.titleTextView.text = feed.name;
             holder.countTextView.text = "${feed.numOfLikes} likes"
-//            holder.thumbImageView.setImageResource(feed.thumbnail);
             Picasso.with(context).load(feed.thumbnail).into(holder.thumbImageView);
+
 
 //        holder.overflowImageView.setOnClickListener(object : View.OnClickListener{
 //            override fun onClick(view: View) {
