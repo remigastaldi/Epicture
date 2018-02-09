@@ -8,12 +8,12 @@ import android.os.StrictMode
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
+import org.json.JSONArray
+import org.json.JSONObject
 import java.io.File
-import com.squareup.picasso.Picasso
 
 class MainActivity : AppCompatActivity() {
     private var instagram = InstagramApiContext.instagram
@@ -22,12 +22,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val list = ArrayList<Feed>()
-        prepareList(list)
         val rView = findViewById<RecyclerView>(R.id.rView)
 
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
 
         StrictMode.setThreadPolicy(policy)
+        prepareList(list)
 
 
 //        var response = instagram?.getUserFeed()
@@ -57,9 +57,46 @@ class MainActivity : AppCompatActivity() {
 
     }
     private fun prepareList(list : ArrayList<Feed>){
-        list.add(Feed("What is", 2, "https://picsum.photos/1000/800/?random"))
+        val response = instagram?.getUserFeed()
+        val items = response?.jsonObject?.getJSONArray("items")
+
+        val file = File(this.filesDir, "log.txt")
+
+        file.printWriter().use {out ->
+            out.println(response?.text)
+        }
+       var i = 0
+        while (!items!!.isNull(i)) {
+            val item = items.get(i) as JSONObject
+
+            val images = item.get("image_versions2") as JSONObject
+            val candidates = images.getJSONArray("candidates")
+            val image1 = candidates.get(0) as JSONObject
+            val url = image1.getString("url")
+
+            var text = ""
+            val comments = item.getJSONArray("preview_comments")
+            if (!comments.isNull(0)) {
+                val comment = comments.get(0) as JSONObject
+                text = comment.getString("text")
+            }
+
+            val likes = item.getInt("like_count")
+
+            list.add(Feed(text, likes, url))
+
+            i++
+        }
+       // val item = items?.get(0) as JSONObject
+     /*   val images = item.get("image_versions2") as JSONObject
+        val candidates = images.getJSONArray("candidates")
+        val image1 = candidates.get(0) as JSONObject
+        val url = image1.get("url") as String
+        println(url)
+        list.add(Feed("What is", 2, url))
         list.add(Feed("No No", 2, "https://picsum.photos/1920/1080/?random"))
         list.add(Feed("test", 2, "https://picsum.photos/600/1200/?random"))
+        */
     }
 
 
