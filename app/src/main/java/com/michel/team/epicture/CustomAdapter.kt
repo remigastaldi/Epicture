@@ -17,47 +17,44 @@ import android.widget.TextView
     class CustomAdapter(private val context : Context, private val list : List<Feed>) : RecyclerView.Adapter<CustomAdapter.ViewHolder>(){
 
         class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            var titleTextView: TextView
-            var countTextView: TextView
-            var thumbImageView : ImageView
-            var overflowImageView : ImageView
+            var titleTextView: TextView = itemView.findViewById(R.id.comment_feed) as TextView
+            var countTextView: TextView = itemView.findViewById(R.id.like_counter) as TextView
+            var thumbImageView : ImageView = itemView.findViewById(R.id.image_feed) as ImageView
+            //var overflowImageView : ImageView
 
             init {
-                titleTextView = itemView.findViewById(R.id.title) as TextView
-                countTextView = itemView.findViewById(R.id.count) as TextView
-                thumbImageView = itemView.findViewById(R.id.thumbnail) as ImageView
-                overflowImageView = itemView.findViewById(R.id.overflow) as ImageView
+                //overflowImageView = itemView.findViewById(R.id.overflow) as ImageView
             }
         }
         override fun onCreateViewHolder(parent : ViewGroup, type : Int) : CustomAdapter.ViewHolder{
-            val view : View = LayoutInflater.from(parent.context).inflate(R.layout.activity_feed, parent, false);
+            val view : View = LayoutInflater.from(parent.context).inflate(R.layout.activity_feed, parent, false)
             val card = view.findViewById(R.id.card_view) as CardView
-            //   card.setCardBackgroundColor(Color.parseColor("#E6E6E6"));
-            card.maxCardElevation = 2.0F;
-            card.radius = 5.0F;
-            return ViewHolder(view);
+            //   card.setCardBackgroundColor(Color.parseColor("#E6E6E6"))
+            card.maxCardElevation = 2.0F
+            card.radius = 5.0F
+            return ViewHolder(view)
         }
         override fun onBindViewHolder(holder : CustomAdapter.ViewHolder, position : Int){
             var feed : Feed = list.get(position)
-            holder.titleTextView.text = feed.name;
-            holder.countTextView.text = "${feed.numOfSongs} songs"
-            holder.thumbImageView.setImageResource(feed.thumbnail);
+            holder.titleTextView.text = feed.name
+            holder.countTextView.text = feed.numOfSongs.toString()
+            holder.thumbImageView.setImageResource(feed.thumbnail)
 //        holder.overflowImageView.setOnClickListener(object : View.OnClickListener{
 //            override fun onClick(view: View) {
 //                showPopupMenu(holder.overflowImageView)
 //            }
 //        });
-            holder.overflowImageView.setOnClickListener{showPopupMenu(holder.overflowImageView)};
+            //holder.overflowImageView.setOnClickListener{showPopupMenu(holder.overflowImageView)};
         }
         private fun showPopupMenu(view: View) {
             // inflate menu
             val popup = PopupMenu(context, view)
-            val inflater = popup.getMenuInflater()
+            val inflater = popup.menuInflater
 //            inflater.inflate(R.menu.menu_album, popup.getMenu())
             popup.setOnMenuItemClickListener(null)
             popup.show()
         }
         override fun getItemCount() : Int{
-            return list.size;
+            return list.size
         }
 }

@@ -1,18 +1,18 @@
 package com.michel.team.epicture
 
-import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
-import android.os.StrictMode
-import android.util.Log
-import android.widget.TextView
-import java.io.File
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.res.Configuration
-import android.support.v7.widget.GridLayoutManager
+import android.os.Bundle
+import android.os.StrictMode
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
     private var instagram = InstagramApiContext.instagram
@@ -20,9 +20,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val list = ArrayList<Feed>();
-        prepareList(list);
-        val rView = findViewById(R.id.rView) as RecyclerView;
+        val list = ArrayList<Feed>()
+        prepareList(list)
+        val rView = findViewById<RecyclerView>(R.id.rView)
 
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
 
@@ -44,8 +44,8 @@ class MainActivity : AppCompatActivity() {
         Log.v("MainActivity", response?.text)
 
         val adapter = CustomAdapter(this, list)
-        rView.adapter = adapter;
-        val orientation : Int = getResources().getConfiguration().orientation
+        rView.adapter = adapter
+        val orientation : Int = resources.configuration.orientation
         rView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         if(orientation == Configuration.ORIENTATION_LANDSCAPE){
             rView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 
     }
     private fun prepareList(list : ArrayList<Feed>){
-        list.add(Feed("What is", 2, R.drawable.login_background))
+        list.add(Feed("What isqsddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", 2, R.drawable.login_background))
         list.add(Feed("No No", 2, R.drawable.login_background))
         list.add(Feed("test", 2, R.drawable.login_background))
     }
@@ -70,13 +70,38 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.logout_action -> {
-                instagram?.logout()
-                val intentMain = Intent(this@MainActivity,
-                        LoginActivity::class.java)
-                this@MainActivity.startActivity(intentMain)
+                logoutDialog()
             }
             else -> return super.onOptionsItemSelected(item)
         }
         return true
+    }
+
+    private fun logoutDialog() {
+        val builder = AlertDialog.Builder(this)
+
+        val inflater = this.layoutInflater
+        val dialogView = inflater.inflate(R.layout.logout_layout, null)
+
+        builder.setView(dialogView)
+
+        val okButton = dialogView.findViewById<Button>(R.id.logout_ok_button)
+        val cancelButton = dialogView.findViewById<Button>(R.id.logout_cancel_button)
+
+        val dialog = builder.create()
+
+        okButton.setOnClickListener {
+            instagram?.logout()
+            val intentMain = Intent(this@MainActivity,
+                    LoginActivity::class.java)
+            this@MainActivity.startActivity(intentMain)
+        }
+
+        cancelButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
     }
 }
