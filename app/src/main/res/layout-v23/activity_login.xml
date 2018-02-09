@@ -42,7 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <EditText
+                <android.support.design.widget.TextInputEditText
                     android:id="@+id/login_input"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <EditText
+                <android.support.design.widget.TextInputEditText
                     android:id="@+id/password_input"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -99,5 +99,6 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/user_circle"
         android:elevation="4dp"
-        android:src="@drawable/user_profile" />
+        android:src="@drawable/user_profile"
+        android:contentDescription="@string/user_profile_photo" />
 </RelativeLayout>

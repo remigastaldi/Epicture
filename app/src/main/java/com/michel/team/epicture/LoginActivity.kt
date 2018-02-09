@@ -3,9 +3,9 @@ package com.michel.team.epicture
 import android.content.Intent
 import android.os.Bundle
 import android.os.StrictMode
+import android.support.design.widget.TextInputEditText
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 
 /**
@@ -26,8 +26,8 @@ class LoginActivity : AppCompatActivity() {
 
         StrictMode.setThreadPolicy(policy)
 
-        val btn_click_me = findViewById<Button>(R.id.signInButton)
-        btn_click_me.setOnClickListener {
+        val btClickMe = findViewById<Button>(R.id.signInButton)
+        btClickMe.setOnClickListener {
             signIn()
         }
 
@@ -41,8 +41,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun signIn() {
-        val login = findViewById<EditText>(R.id.login_input)
-        val password = findViewById<EditText>(R.id.password_input)
+        val login = findViewById<TextInputEditText>(R.id.login_input)
+        val password = findViewById<TextInputEditText>(R.id.password_input)
 
         Toast.makeText(this, "login " + login.text + " & password " + password.text , Toast.LENGTH_LONG).show()
         println("login " + login.text + " & password " + password.text);
