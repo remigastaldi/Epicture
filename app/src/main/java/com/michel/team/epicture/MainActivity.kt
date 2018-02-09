@@ -30,20 +30,20 @@ class MainActivity : AppCompatActivity() {
         StrictMode.setThreadPolicy(policy)
 
 
-        var response = instagram?.getUserFeed()
+//        var response = instagram?.getUserFeed()
 
 //        var text = this.findViewById<TextView>(R.id.text_view)
 
  //       text.text = response?.text
 
-        val file = File(this.filesDir, "log.txt")
+  /*      val file = File(this.filesDir, "log.txt")
 
         file.printWriter().use {out ->
             out.println(response?.text)
         }
         println(response?.text)
         Log.v("MainActivity", response?.text)
-
+*/
         val adapter = CustomAdapter(this, list)
         rView.adapter = adapter
         val orientation : Int = resources.configuration.orientation
