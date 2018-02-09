@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
     private fun prepareList(list : ArrayList<Feed>){
         list.add(Feed("What is", 2, "https://picsum.photos/1000/800/?random"))
         list.add(Feed("No No", 2, "https://picsum.photos/1920/1080/?random"))
-        list.add(Feed("test", 2, "https://picsum.photos/380/200/?random"))
+        list.add(Feed("test", 2, "https://picsum.photos/600/1200/?random"))
     }
 
 

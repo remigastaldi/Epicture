@@ -38,7 +38,7 @@ import com.squareup.picasso.Picasso
         override fun onBindViewHolder(holder : CustomAdapter.ViewHolder, position : Int){
             var feed : Feed = list.get(position)
             holder.titleTextView.text = feed.name;
-            holder.countTextView.text = "${feed.numOfSongs} songs"
+            holder.countTextView.text = "${feed.numOfLikes} Likes"
 //            holder.thumbImageView.setImageResource(feed.thumbnail);
             Picasso.with(context).load(feed.thumbnail).into(holder.thumbImageView);
 
