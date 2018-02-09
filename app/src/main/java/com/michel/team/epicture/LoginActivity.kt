@@ -44,7 +44,6 @@ class LoginActivity : AppCompatActivity() {
         val login = findViewById<TextInputEditText>(R.id.login_input)
         val password = findViewById<TextInputEditText>(R.id.password_input)
 
-        Toast.makeText(this, "login " + login.text + " & password " + password.text , Toast.LENGTH_LONG).show()
         println("login " + login.text + " & password " + password.text);
 
         instagram?.username = "epicture42"
@@ -57,5 +56,7 @@ class LoginActivity : AppCompatActivity() {
                     MainActivity::class.java)
             this@LoginActivity.startActivity(intentMain)
         }
+        else
+            Toast.makeText(this,"Invalid user or password" , Toast.LENGTH_LONG).show()
     }
 }
