@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.PorterDuff
+import android.graphics.Typeface
 import android.os.Bundle
 import android.os.StrictMode
 import android.support.v4.content.ContextCompat
@@ -12,10 +13,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
+import android.widget.*
 import com.michel.team.epicture.InstagramApiContext.instagram
 import org.json.JSONObject
 
@@ -32,6 +30,15 @@ class UserProfileActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
         val rView = findViewById<RecyclerView>(R.id.rView)
+
+        // Set Custom Menu
+        val action = getSupportActionBar()
+        action?.setDisplayShowCustomEnabled(true)
+        action?.setCustomView(R.layout.custom_menu)
+
+        val textView = findViewById(R.id.app_title) as TextView
+        val typeface = Typeface.createFromAsset(assets, "fonts/Billabong.ttf")
+        textView.typeface = typeface
 
         val homeButton = findViewById<ImageView>(R.id.action_bar_home_button)
         homeButton.background.clearColorFilter()
@@ -60,6 +67,17 @@ class UserProfileActivity : AppCompatActivity() {
         if(orientation == Configuration.ORIENTATION_PORTRAIT){
             rView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         }
+
+        // Action Bar handler
+        val view = supportActionBar!!.customView
+        val exitButton = view.findViewById(R.id.logout_action) as ImageButton
+        exitButton.setOnClickListener({ v ->
+            logoutDialog()
+        })
+        val photoButton = view.findViewById(R.id.camera_action) as ImageButton
+        photoButton.setOnClickListener({ v ->
+            Toast.makeText(this,"Camera clickeds" , Toast.LENGTH_LONG).show()
+        })
 
     }
 
@@ -120,22 +138,6 @@ class UserProfileActivity : AppCompatActivity() {
                 i++
             }
         }).start()
-    }
-
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.logout_action -> {
-                logoutDialog()
-            }
-            else -> return super.onOptionsItemSelected(item)
-        }
-        return true
     }
 
     private fun logoutDialog() {

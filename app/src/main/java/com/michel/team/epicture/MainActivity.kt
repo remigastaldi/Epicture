@@ -1,9 +1,11 @@
 package com.michel.team.epicture
 
+import android.app.ActionBar
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.PorterDuff
+import android.graphics.Typeface
 import android.os.Bundle
 import android.os.StrictMode
 import android.support.v4.content.ContextCompat
@@ -12,15 +14,17 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
 import com.squareup.picasso.Downloader
 import khttp.responses.Response
 import org.json.JSONObject
 import java.io.File
 import kotlin.concurrent.thread
+import android.text.Spannable
+import android.text.style.TypefaceSpan
+import android.text.SpannableString
+import android.view.View
+import android.widget.*
+
 
 class MainActivity : AppCompatActivity() {
     private var instagram = InstagramApiContext.instagram
@@ -28,9 +32,19 @@ class MainActivity : AppCompatActivity() {
     private var adapter = CustomAdapter(this, list)
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val rView = findViewById<RecyclerView>(R.id.rView)
+
+        // Set Custom Menu
+        val action = getSupportActionBar()
+        action?.setDisplayShowCustomEnabled(true)
+        action?.setCustomView(R.layout.custom_menu)
+
+        val textView = findViewById(R.id.app_title) as TextView
+        val typeface = Typeface.createFromAsset(assets, "fonts/Billabong.ttf")
+        textView.typeface = typeface
 
         val userProfileButton = findViewById<ImageView>(R.id.action_bar_user_profile_button)
         userProfileButton.background.clearColorFilter()
@@ -50,14 +64,27 @@ class MainActivity : AppCompatActivity() {
         StrictMode.setThreadPolicy(policy)
 
         rView.adapter = adapter
-        val orientation : Int = resources.configuration.orientation
+        val orientation: Int = resources.configuration.orientation
         rView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        if(orientation == Configuration.ORIENTATION_LANDSCAPE){
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             rView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         }
-        if(orientation == Configuration.ORIENTATION_PORTRAIT){
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             rView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         }
+
+        // Action Bar handler
+        val view = supportActionBar!!.customView
+
+        val exitButton = view.findViewById(R.id.logout_action) as ImageButton
+        exitButton.setOnClickListener({ v ->
+            logoutDialog()
+        })
+
+        val photoButton = view.findViewById(R.id.camera_action) as ImageButton
+        photoButton.setOnClickListener({ v ->
+            Toast.makeText(this,"Camera clicked" , Toast.LENGTH_LONG).show()
+        })
     }
 
     override fun onStart() {
@@ -66,16 +93,16 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
     }
 
-    private fun prepareList(){
+    private fun prepareList() {
 
         Thread(Runnable {
-            var response  = instagram?.getTimelineFeed()
+            var response = instagram?.getTimelineFeed()
 
 
             val items = response?.jsonObject?.getJSONArray("feed_items")
 
 
-           var i = 0
+            var i = 0
             while (!items!!.isNull(i)) {
                 val itemPack = items.get(i) as JSONObject
 
@@ -102,20 +129,19 @@ class MainActivity : AppCompatActivity() {
                     val comments = item.getJSONArray("preview_comments")
                     if (!comments.isNull(0)) {
                         val comment = comments.get(0) as JSONObject
-                        text = "<b>" + comment.getJSONObject("user").getString("username") + "</b> " +  comment.getString("text")
+                        text = "<b>" + comment.getJSONObject("user").getString("username") + "</b> " + comment.getString("text")
                     }
-                }
-                else {
+                } else {
                     val caption = item.get("caption") as JSONObject
                     if (!caption.isNull("text")) {
-                        text = "<b>" + username + "</b> " +  caption.getString("text")
+                        text = "<b>" + username + "</b> " + caption.getString("text")
                     }
                 }
 
                 val likes = item.getInt("like_count")
 
                 if (item.getInt("media_type") == 2) {
-                    val urlvideo  = item.getJSONArray("video_versions").get(0) as JSONObject
+                    val urlvideo = item.getJSONArray("video_versions").get(0) as JSONObject
                     list.add(Feed(username, user_pic, imageWidth, imageHeight, text, likes, hasLiked, urlvideo.getString("url"), 1, item.getBoolean("has_audio")))
 
                 } else {
@@ -128,22 +154,6 @@ class MainActivity : AppCompatActivity() {
                 i++
             }
         }).start()
-    }
-
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.logout_action -> {
-                logoutDialog()
-            }
-            else -> return super.onOptionsItemSelected(item)
-        }
-        return true
     }
 
     private fun logoutDialog() {
