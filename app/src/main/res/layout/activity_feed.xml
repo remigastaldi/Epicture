@@ -12,8 +12,6 @@
                 android:id="@+id/image_feed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:scaleType="fitXY"
                 android:contentDescription="@string/image" />
 
             <LinearLayout

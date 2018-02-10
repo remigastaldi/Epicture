@@ -82,6 +82,8 @@ class MainActivity : AppCompatActivity() {
             val candidates = images.getJSONArray("candidates")
             val image1 = candidates.get(0) as JSONObject
             val url = image1.getString("url")
+            val imageWidth = image1.getInt("width")
+            val imageHeight = image1.getInt("height")
 
             var text = ""
             if (item.isNull("caption")) {
@@ -100,7 +102,7 @@ class MainActivity : AppCompatActivity() {
 
             val likes = item.getInt("like_count")
 
-            list.add(Feed(text, likes, hasLiked, url))
+            list.add(Feed(imageWidth, imageHeight, text, likes, hasLiked, url))
             adapter.notifyItemInserted(list.size)
             i++
         }

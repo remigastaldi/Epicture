@@ -1,13 +1,17 @@
 package com.michel.team.epicture
 
 import android.content.Context
+import android.graphics.Point
 import android.support.v7.widget.CardView
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
+import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.squareup.picasso.Picasso
@@ -23,41 +27,40 @@ import com.squareup.picasso.Picasso
             var thumbImageView : ImageView = itemView.findViewById(R.id.image_feed)
             var favoriteImageView : ImageView = itemView.findViewById(R.id.like_button_feed)
         }
+
         override fun onCreateViewHolder(parent : ViewGroup, type : Int) : CustomAdapter.ViewHolder{
             val view : View = LayoutInflater.from(parent.context).inflate(R.layout.activity_feed, parent, false)
-            val card = view.findViewById(R.id.card_view) as CardView
+            //val card = view.findViewById(R.id.card_view) as CardView
             //   card.setCardBackgroundColor(Color.parseColor("#E6E6E6"))
-            card.maxCardElevation = 2.0F
-            card.radius = 5.0F
+            /* card.maxCardElevation = 2.0F
+            card.radius = 5.0F */
             return ViewHolder(view)
         }
+
         override fun onBindViewHolder(holder : CustomAdapter.ViewHolder, position : Int){
-            var feed : Feed = list[position]
+            val feed : Feed = list[position]
 
             holder.favoriteImageView.setOnClickListener {
                 Toast.makeText(context, "OK", Toast.LENGTH_SHORT).show()
             }
+
             if (feed.hasLiked)
                 holder.favoriteImageView.background = context.getDrawable(R.drawable.ic_action_favorite)
             holder.titleTextView.text = feed.name
             holder.countTextView.text = "${feed.numOfLikes} likes"
-            Picasso.with(context).load(feed.thumbnail).into(holder.thumbImageView);
 
-//        holder.overflowImageView.setOnClickListener(object : View.OnClickListener{
-//            override fun onClick(view: View) {
-//                showPopupMenu(holder.overflowImageView)
-//            }
-//        });
-            //holder.overflowImageView.setOnClickListener{showPopupMenu(holder.overflowImageView)};
+            val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            val display = windowManager.defaultDisplay
+            val size = Point()
+            display.getSize(size)
+            val imageHeight = (size.x / feed.imageWidth.toFloat()) * feed.imageHeight
+
+            holder.thumbImageView.layoutParams.height = imageHeight.toInt()
+            holder.thumbImageView.layoutParams.width = size.x
+
+            Picasso.with(context).load(feed.thumbnail).into(holder.thumbImageView);
         }
-        private fun showPopupMenu(view: View) {
-            // inflate menu
-            val popup = PopupMenu(context, view)
-            //val inflater = popup.menuInflater
-//            inflater.inflate(R.menu.menu_album, popup.getMenu())
-            popup.setOnMenuItemClickListener(null)
-            popup.show()
-        }
+
         override fun getItemCount() : Int{
             return list.size
         }
