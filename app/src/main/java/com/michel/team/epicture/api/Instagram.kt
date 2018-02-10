@@ -61,11 +61,6 @@ class Instagram(private var context: Context) {
                 ds_user_id = jar.getCookie("ds_user_id")?.value.toString()
                 token = jar.getCookie("csrftoken")?.value.toString()
                 rankToken = "${ds_user_id}_$uuid"
-                syncFeature()
-                getAutoCompleteUserList()
-                getTimelineFeed()
-                getv2Inbox()
-                getRecentActivity()
                 println("Instagram login success")
             }
         }
