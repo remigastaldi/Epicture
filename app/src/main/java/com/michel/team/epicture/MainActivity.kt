@@ -107,7 +107,13 @@ class MainActivity : AppCompatActivity() {
 
             val likes = item.getInt("like_count")
 
-            list.add(Feed(imageWidth, imageHeight, text, likes, hasLiked, url))
+            if (item.getInt("media_type") == 2) {
+                val urlvideo  = item.getJSONArray("video_versions").get(0) as JSONObject
+                list.add(Feed(imageWidth, imageHeight, text, likes, hasLiked, urlvideo.getString("url"), 1, item.getBoolean("has_audio")))
+
+            } else {
+                list.add(Feed(imageWidth, imageHeight, text, likes, hasLiked, url, 0, false))
+            }
             adapter.notifyItemInserted(list.size)
             i++
         }

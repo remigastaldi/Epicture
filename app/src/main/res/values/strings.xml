@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">Epicture</string>
+    <string name="app_name">Instagram</string>
     <string name="account_login">Account Login</string>
     <string name="user_name">User Name</string>
     <string name="password">Password</string>
-    <string name="forgot_password">Forgot Password?</string>
-    <string name="sign_in">Sign in</string>
+    <string name="forgot_password">Forgotten your login details ?</string>
+    <string name="sign_in">Log In</string>
     <string name="user_profile_photo">user_profile_photo</string>
     <string name="dialog_message">Really logout ?</string>
     <string name="OK">OK</string>

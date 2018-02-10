@@ -2,6 +2,7 @@ package com.michel.team.epicture
 
 import android.content.Context
 import android.graphics.Point
+import android.net.Uri
 import android.support.v7.widget.CardView
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
@@ -11,10 +12,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
 import com.squareup.picasso.Picasso
+import java.net.URI
+import android.view.MotionEvent
+import android.widget.*
+
 
 /**
  * Created by puccio_c on 2/9/18.
@@ -25,7 +27,10 @@ import com.squareup.picasso.Picasso
             var titleTextView: TextView = itemView.findViewById(R.id.comment_feed)
             var countTextView: TextView = itemView.findViewById(R.id.like_counter)
             var thumbImageView : ImageView = itemView.findViewById(R.id.image_feed)
+            var thumbVideoView : VideoView = itemView.findViewById(R.id.video_feed)
             var favoriteImageView : ImageView = itemView.findViewById(R.id.like_button_feed)
+            var playButton : ImageButton = itemView.findViewById(R.id.play_button)
+            var videoFeedMuted : ImageView = itemView.findViewById(R.id.video_feed_muted)
         }
 
         override fun onCreateViewHolder(parent : ViewGroup, type : Int) : CustomAdapter.ViewHolder{
@@ -59,12 +64,42 @@ import com.squareup.picasso.Picasso
             val display = windowManager.defaultDisplay
             val size = Point()
             display.getSize(size)
+            println("Type: " + feed.type)
+
             val imageHeight = (size.x / feed.imageWidth.toFloat()) * feed.imageHeight
 
-            holder.thumbImageView.layoutParams.height = imageHeight.toInt()
-            holder.thumbImageView.layoutParams.width = size.x
+            if (feed.type == 1) {
+                holder.thumbVideoView.visibility = VideoView.VISIBLE
 
-            Picasso.with(context).load(feed.thumbnail).into(holder.thumbImageView);
+                holder.thumbVideoView.layoutParams.height = imageHeight.toInt()
+                holder.thumbVideoView.layoutParams.width = size.x
+                holder.thumbVideoView.setVideoURI(Uri.parse(feed.thumbnail))
+                holder.thumbVideoView.seekTo(1000)
+                holder.playButton.visibility = ImageButton.VISIBLE
+                if (!feed.hasAudio) {
+                    holder.videoFeedMuted.visibility = ImageView.VISIBLE
+                }
+                holder.playButton.setOnClickListener {event ->
+                    val btn = holder.thumbVideoView
+                    holder.playButton.visibility = ImageButton.INVISIBLE
+                    btn.start()
+                }
+                holder.thumbVideoView.setOnTouchListener { v, event ->
+                    val btn = holder.thumbVideoView
+                    if (btn.isPlaying) {
+                        holder.playButton.visibility = ImageButton.VISIBLE
+                        btn.pause()
+                    }
+                    false
+                }
+            } else {
+                holder.thumbImageView.visibility = ImageView.VISIBLE
+                holder.thumbImageView.layoutParams.height = imageHeight.toInt()
+                holder.thumbImageView.layoutParams.width = size.x
+                Picasso.with(context).load(feed.thumbnail).into(holder.thumbImageView);
+            }
+
+
         }
 
         override fun getItemCount() : Int{

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login_background"
+    android:background="@drawable/login_header"
     android:orientation="vertical"
     android:scrollbarAlwaysDrawVerticalTrack="true"
     android:layout_centerInParent="true"
@@ -13,20 +14,18 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:paddingTop="10dp"
         android:layout_marginTop="22dp"
         android:gravity="center_horizontal"
-        android:text="@string/account_login"
+        android:text="@string/app_name"
         android:textColor="#fff"
-        android:textSize="26sp"
+        android:textSize="70sp"
         android:textStyle="bold" />
 
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@+id/login_title"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="70dp"
         android:background="#ffffff"
         android:elevation="4dp"
         android:orientation="vertical"
@@ -46,7 +45,6 @@
                     android:id="@+id/login_input"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/user"
                     android:singleLine="true"
                     android:hint="@string/user_name"
                     android:inputType="textEmailAddress" />
@@ -62,41 +60,47 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:singleLine="true"
-                    android:drawableStart="@drawable/lock"
                     android:hint="@string/password"
                     android:inputType="textPassword" />
             </android.support.design.widget.TextInputLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/signInButton"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/login_button"
+                    android:text="@string/sign_in"
+                    android:textAllCaps="false"
+                    android:textColor="#fff"
+                    android:textSize="18sp" />
+                <pl.droidsonroids.gif.GifImageView
+                    android:id="@+id/loading"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/loading"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:visibility="gone"
+                    android:translationZ="2dp"/>
+            </RelativeLayout>
+
+
+
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:paddingTop="5dp"
-                android:text="@string/forgot_password" />
-
-
-            <Button
-                android:id="@+id/signInButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="22dp"
-                android:background="#d67601"
-                android:text="@string/sign_in"
-                android:textAllCaps="false"
-                android:textColor="#fff"
-                android:textSize="18sp"/>
+                android:fontFamily="sans-serif"
+                android:paddingTop="3dp"
+                android:text="@string/forgot_password"
+                android:textSize="12dp" />
         </LinearLayout>
     </RelativeLayout>
 
-    <ImageButton
-        android:id="@+id/user_profile_photo"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_below="@+id/login_title"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/user_circle"
-        android:elevation="4dp"
-        android:src="@drawable/user_profile"
-        android:contentDescription="@string/user_profile_photo" />
 </RelativeLayout>

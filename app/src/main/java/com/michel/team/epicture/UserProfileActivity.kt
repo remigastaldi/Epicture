@@ -104,7 +104,7 @@ class UserProfileActivity : AppCompatActivity() {
 
             val likes = item.getInt("like_count")
 
-            list.add(Feed(imageWidth, imageHeight, text, likes, hasLiked, url))
+            list.add(Feed(imageWidth, imageHeight, text, likes, hasLiked, url, 0, false))
 
             i++
         }
