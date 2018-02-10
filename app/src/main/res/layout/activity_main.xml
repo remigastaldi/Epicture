@@ -13,37 +13,55 @@
         android:layout_above="@+id/relativeLayout" />
 
     <RelativeLayout
-        android:padding="10dp"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_bar"
         android:background="#EEEEEE"
         android:id="@+id/relativeLayout">
 
-        <ImageButton
-            android:id="@+id/action_bar_home_button"
-            android:layout_marginStart="20dp"
-            android:layout_width="@dimen/action_bar_icons"
-            android:layout_height="@dimen/action_bar_icons"
-            android:background="@drawable/ic_action_home"
-            android:contentDescription="@string/home_button_action_bar_main" />
+        <LinearLayout
+            android:id="@+id/back_button_action_bar_home_button"
+            android:gravity="center"
+            android:layout_width="@dimen/action_bar"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp" >
+            <ImageView
+                android:id="@+id/action_bar_home_button"
+                android:layout_width="@dimen/action_bar_icons"
+                android:layout_height="@dimen/action_bar_icons"
+                android:background="@drawable/ic_action_home"
+                android:contentDescription="@string/home_button_action_bar_main" />
+        </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/action_bar_user_profile_button"
-            android:layout_marginEnd="20dp"
-            android:layout_alignParentEnd="true"
-            android:layout_width="@dimen/action_bar_icons"
-            android:layout_height="@dimen/action_bar_icons"
-            android:background="@drawable/ic_action_person"
-            android:contentDescription="@string/profil_button_action_bar_main" />
-
-        <ImageButton
-            android:id="@+id/action_bar_add_button"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+        <LinearLayout
+            android:id="@+id/back_button_action_bar_add_button"
+            android:gravity="center"
+            android:layout_width="@dimen/action_bar"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/ic_add_box"
-            android:contentDescription="@string/add_button_action_bar_main" />
+            android:layout_height="match_parent"
+            android:layout_marginEnd="20dp" >
+            <ImageView
+                android:id="@+id/action_bar_add_button"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/ic_add_box"
+                android:contentDescription="@string/add_button_action_bar_main" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/back_button_action_bar_user_profile_button"
+            android:gravity="center"
+            android:layout_width="@dimen/action_bar"
+            android:layout_alignParentEnd="true"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="20dp" >
+            <ImageView
+                android:id="@+id/action_bar_user_profile_button"
+                android:layout_width="@dimen/action_bar_icons"
+                android:layout_height="@dimen/action_bar_icons"
+                android:background="@drawable/ic_action_person"
+                android:contentDescription="@string/profil_button_action_bar_main" />
+        </LinearLayout>
 
     </RelativeLayout>
 </RelativeLayout>

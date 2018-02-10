@@ -31,6 +31,8 @@ import android.widget.*
             var favoriteImageView : ImageView = itemView.findViewById(R.id.like_button_feed)
             var playButton : ImageButton = itemView.findViewById(R.id.play_button)
             var videoFeedMuted : ImageView = itemView.findViewById(R.id.video_feed_muted)
+            var usernameTextView : TextView = itemView.findViewById(R.id.username_card)
+            var user_picImageView : ImageView = itemView.findViewById(R.id.user_pic_card)
         }
 
         override fun onCreateViewHolder(parent : ViewGroup, type : Int) : CustomAdapter.ViewHolder{
@@ -96,10 +98,11 @@ import android.widget.*
                 holder.thumbImageView.visibility = ImageView.VISIBLE
                 holder.thumbImageView.layoutParams.height = imageHeight.toInt()
                 holder.thumbImageView.layoutParams.width = size.x
-                Picasso.with(context).load(feed.thumbnail).into(holder.thumbImageView);
+
+                Picasso.with(context).load(feed.thumbnail).into(holder.thumbImageView)
             }
-
-
+            holder.usernameTextView.text = feed.username
+            Picasso.with(context).load(feed.user_pic).into(holder.user_picImageView)
         }
 
         override fun getItemCount() : Int{

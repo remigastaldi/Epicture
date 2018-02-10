@@ -14,8 +14,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.LinearLayout
+import com.squareup.picasso.Downloader
+import khttp.responses.Response
 import org.json.JSONObject
 import java.io.File
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
     private var instagram = InstagramApiContext.instagram
@@ -27,15 +32,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val rView = findViewById<RecyclerView>(R.id.rView)
 
-        val userProfileButton = findViewById<ImageButton>(R.id.action_bar_user_profile_button)
+        val userProfileButton = findViewById<ImageView>(R.id.action_bar_user_profile_button)
         userProfileButton.background.clearColorFilter()
-        userProfileButton.setOnClickListener {
+        val backButtonUserProfileButton = findViewById<LinearLayout>(R.id.back_button_action_bar_user_profile_button)
+        backButtonUserProfileButton.setOnClickListener {
             val intentUserProfile = Intent(this,
                     UserProfileActivity::class.java)
+            intentUserProfile.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
             this.startActivity(intentUserProfile)
         }
 
-        val homeButton = findViewById<ImageButton>(R.id.action_bar_home_button)
+        val homeButton = findViewById<ImageView>(R.id.action_bar_home_button)
         homeButton.background.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.MULTIPLY)
 
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
@@ -54,69 +61,73 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onStart() {
+
         prepareList()
         super.onStart()
     }
 
     private fun prepareList(){
 
-        val response = instagram?.getTimelineFeed()
-        val file = File(this.filesDir, "log.txt")
-
-        file.printWriter().use {out ->
-            out.println(response?.text)
-        }
-
-        val items = response?.jsonObject?.getJSONArray("feed_items")
+        Thread(Runnable {
+            var response  = instagram?.getTimelineFeed()
 
 
-       var i = 0
-        while (!items!!.isNull(i)) {
-            val itemPack = items.get(i) as JSONObject
+            val items = response?.jsonObject?.getJSONArray("feed_items")
 
-            if (itemPack.isNull("media_or_ad")) {
+
+           var i = 0
+            while (!items!!.isNull(i)) {
+                val itemPack = items.get(i) as JSONObject
+
+                if (itemPack.isNull("media_or_ad")) {
+                    i++
+                    continue
+                }
+
+                val item = itemPack.get("media_or_ad") as JSONObject
+
+                val hasLiked = item.getBoolean("has_liked")
+
+                val images = item.get("image_versions2") as JSONObject
+                val candidates = images.getJSONArray("candidates")
+                val image1 = candidates.get(0) as JSONObject
+                val url = image1.getString("url")
+                val imageWidth = image1.getInt("width")
+                val imageHeight = image1.getInt("height")
+
+                val username = item.getJSONObject("user").getString("username")
+                val user_pic = item.getJSONObject("user").getString("profile_pic_url")
+                var text = ""
+                if (item.isNull("caption")) {
+                    val comments = item.getJSONArray("preview_comments")
+                    if (!comments.isNull(0)) {
+                        val comment = comments.get(0) as JSONObject
+                        text = "<b>" + comment.getJSONObject("user").getString("username") + "</b> " +  comment.getString("text")
+                    }
+                }
+                else {
+                    val caption = item.get("caption") as JSONObject
+                    if (!caption.isNull("text")) {
+                        text = "<b>" + username + "</b> " +  caption.getString("text")
+                    }
+                }
+
+                val likes = item.getInt("like_count")
+
+                if (item.getInt("media_type") == 2) {
+                    val urlvideo  = item.getJSONArray("video_versions").get(0) as JSONObject
+                    list.add(Feed(username, user_pic, imageWidth, imageHeight, text, likes, hasLiked, urlvideo.getString("url"), 1, item.getBoolean("has_audio")))
+
+                } else {
+                    list.add(Feed(username, user_pic, imageWidth, imageHeight, text, likes, hasLiked, url, 0, false))
+                }
+
+                this.runOnUiThread({
+                    adapter.notifyItemInserted(list.size)
+                })
                 i++
-                continue
             }
-
-            val item = itemPack.get("media_or_ad") as JSONObject
-
-            val hasLiked = item.getBoolean("has_liked")
-
-            val images = item.get("image_versions2") as JSONObject
-            val candidates = images.getJSONArray("candidates")
-            val image1 = candidates.get(0) as JSONObject
-            val url = image1.getString("url")
-            val imageWidth = image1.getInt("width")
-            val imageHeight = image1.getInt("height")
-
-            var text = ""
-            if (item.isNull("caption")) {
-                val comments = item.getJSONArray("preview_comments")
-                if (!comments.isNull(0)) {
-                    val comment = comments.get(0) as JSONObject
-                    text = "<b>" + comment.getJSONObject("user").getString("username") + "</b> " +  comment.getString("text")
-                }
-            }
-            else {
-                val caption = item.get("caption") as JSONObject
-                if (!caption.isNull("text")) {
-                    text = "<b>" + caption.getJSONObject("user").getString("username") + "</b> " +  caption.getString("text")
-                }
-            }
-
-            val likes = item.getInt("like_count")
-
-            if (item.getInt("media_type") == 2) {
-                val urlvideo  = item.getJSONArray("video_versions").get(0) as JSONObject
-                list.add(Feed(imageWidth, imageHeight, text, likes, hasLiked, urlvideo.getString("url"), 1, item.getBoolean("has_audio")))
-
-            } else {
-                list.add(Feed(imageWidth, imageHeight, text, likes, hasLiked, url, 0, false))
-            }
-            adapter.notifyItemInserted(list.size)
-            i++
-        }
+        }).start()
     }
 
 
