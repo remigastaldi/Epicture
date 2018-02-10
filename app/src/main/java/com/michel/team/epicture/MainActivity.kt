@@ -3,7 +3,6 @@ package com.michel.team.epicture
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.res.Configuration
-import android.content.res.Resources
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.os.StrictMode
@@ -11,7 +10,6 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.Html
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -30,12 +28,15 @@ class MainActivity : AppCompatActivity() {
         val rView = findViewById<RecyclerView>(R.id.rView)
 
         val userProfileButton = findViewById<ImageButton>(R.id.action_bar_user_profile_button)
-
+        userProfileButton.background.clearColorFilter()
         userProfileButton.setOnClickListener {
             val intentUserProfile = Intent(this,
                     UserProfileActivity::class.java)
             this.startActivity(intentUserProfile)
         }
+
+        val homeButton = findViewById<ImageButton>(R.id.action_bar_home_button)
+        homeButton.background.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.MULTIPLY)
 
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
 
