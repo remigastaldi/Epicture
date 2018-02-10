@@ -2,7 +2,9 @@ package com.michel.team.epicture
 
 import android.content.Context
 import android.graphics.Point
+import android.media.AudioManager.AUDIOFOCUS_NONE
 import android.net.Uri
+import android.os.Build
 import android.support.v7.widget.CardView
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
@@ -75,6 +77,9 @@ import android.widget.*
 
                 holder.thumbVideoView.layoutParams.height = imageHeight.toInt()
                 holder.thumbVideoView.layoutParams.width = size.x
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    holder.thumbVideoView.setAudioFocusRequest(AUDIOFOCUS_NONE)
+                }
                 holder.thumbVideoView.setVideoURI(Uri.parse(feed.thumbnail))
                 holder.thumbVideoView.seekTo(1000)
                 holder.playButton.visibility = ImageButton.VISIBLE

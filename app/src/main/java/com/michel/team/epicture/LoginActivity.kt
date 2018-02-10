@@ -77,8 +77,7 @@ class LoginActivity : AppCompatActivity() {
             instagram?.username = login.text.toString()
             instagram?.password = password.text.toString()
         }
-        val thread = Thread({
-            // call runnable here
+        Thread({
             instagram?.prepare()
             if (!instagram!!.isLogin)
                 instagram?.login()
