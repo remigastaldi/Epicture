@@ -43,7 +43,6 @@ import com.squareup.picasso.Picasso
             holder.countTextView.text = "${feed.numOfLikes} likes"
             Picasso.with(context).load(feed.thumbnail).into(holder.thumbImageView);
 
-
 //        holder.overflowImageView.setOnClickListener(object : View.OnClickListener{
 //            override fun onClick(view: View) {
 //                showPopupMenu(holder.overflowImageView)

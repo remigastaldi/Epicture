@@ -12,17 +12,17 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.ImageButton
-import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
     private var instagram = InstagramApiContext.instagram
+    val list = ArrayList<Feed>()
+    private var adapter = CustomAdapter(this, list)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val list = ArrayList<Feed>()
         val rView = findViewById<RecyclerView>(R.id.rView)
 
         val userProfileButton = findViewById<ImageButton>(R.id.action_bar_user_profile_button)
@@ -36,9 +36,7 @@ class MainActivity : AppCompatActivity() {
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
 
         StrictMode.setThreadPolicy(policy)
-        prepareList(list)
 
-        val adapter = CustomAdapter(this, list)
         rView.adapter = adapter
         val orientation : Int = resources.configuration.orientation
         rView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -48,9 +46,14 @@ class MainActivity : AppCompatActivity() {
         if(orientation == Configuration.ORIENTATION_PORTRAIT){
             rView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         }
-
     }
-    private fun prepareList(list : ArrayList<Feed>){
+
+    override fun onStart() {
+        prepareList()
+        super.onStart()
+    }
+
+    private fun prepareList(){
 
         val response = instagram?.getTimelineFeed()
         val file = File(this.filesDir, "log.txt")
@@ -66,8 +69,10 @@ class MainActivity : AppCompatActivity() {
         while (!items!!.isNull(i)) {
             val itemPack = items.get(i) as JSONObject
 
-            if (itemPack.isNull("media_or_ad"))
+            if (itemPack.isNull("media_or_ad")) {
+                i++
                 continue
+            }
 
             val item = itemPack.get("media_or_ad") as JSONObject
 
@@ -88,7 +93,7 @@ class MainActivity : AppCompatActivity() {
             val likes = item.getInt("like_count")
 
             list.add(Feed(text, likes, hasLiked, url))
-
+            adapter.notifyItemInserted(list.size)
             i++
         }
     }

@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.os.StrictMode
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -15,18 +14,19 @@ import android.widget.Button
 import android.widget.ImageButton
 import com.michel.team.epicture.InstagramApiContext.instagram
 import org.json.JSONObject
-import java.io.File
 
 /**
  * Created by gastal_r on 2/10/18.
  */
 
 class UserProfileActivity : AppCompatActivity() {
+    val list = ArrayList<Feed>()
+    private var adapter = CustomAdapter(this, list)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
-        val list = ArrayList<Feed>()
         val rView = findViewById<RecyclerView>(R.id.rView)
 
         val userProfileButton = findViewById<ImageButton>(R.id.action_bar_home_button)
@@ -40,10 +40,7 @@ class UserProfileActivity : AppCompatActivity() {
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
 
         StrictMode.setThreadPolicy(policy)
-        prepareList(list)
 
-
-        val adapter = CustomAdapter(this, list)
         rView.adapter = adapter
         val orientation : Int = resources.configuration.orientation
         rView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -55,7 +52,13 @@ class UserProfileActivity : AppCompatActivity() {
         }
 
     }
-    private fun prepareList(list : ArrayList<Feed>){
+
+    override fun onStart() {
+        prepareList()
+        super.onStart()
+    }
+
+    private fun prepareList(){
         val response = instagram?.getUserFeed()
         val items = response?.jsonObject?.getJSONArray("items")
 
@@ -63,8 +66,10 @@ class UserProfileActivity : AppCompatActivity() {
         while (!items!!.isNull(i)) {
             val item = items.get(i) as JSONObject
 
-            if (item.isNull("image_versions2"))
+            if (item.isNull("image_versions2")) {
+                i++
                 continue
+            }
 
             val hasLiked = item.getBoolean("has_liked")
 
