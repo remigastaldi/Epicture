@@ -91,15 +91,16 @@ class UserProfileActivity : AppCompatActivity() {
                 val comments = item.getJSONArray("preview_comments")
                 if (!comments.isNull(0)) {
                     val comment = comments.get(0) as JSONObject
-                    text = comment.getString("text")
+                    text = "<b>" + comment.getJSONObject("user").getString("username") + "</b> " +  comment.getString("text")
                 }
             }
             else {
                 val caption = item.get("caption") as JSONObject
                 if (!caption.isNull("text")) {
-                    text = caption.getString("text")
+                    text = "<b>" + caption.getJSONObject("user").getString("username") + "</b> " +  caption.getString("text")
                 }
             }
+
 
             val likes = item.getInt("like_count")
 

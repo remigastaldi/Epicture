@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                 val comments = item.getJSONArray("preview_comments")
                 if (!comments.isNull(0)) {
                     val comment = comments.get(0) as JSONObject
-                    text = comment.getString("text")
+                    text = "<b>" + comment.getJSONObject("user").getString("username") + "</b> " +  comment.getString("text")
                 }
             }
             else {
