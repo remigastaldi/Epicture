@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.os.StrictMode
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -12,24 +13,27 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.ImageButton
-import org.json.JSONArray
+import com.michel.team.epicture.InstagramApiContext.instagram
 import org.json.JSONObject
 import java.io.File
 
-class MainActivity : AppCompatActivity() {
-    private var instagram = InstagramApiContext.instagram
+/**
+ * Created by gastal_r on 2/10/18.
+ */
 
+class UserProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
         val list = ArrayList<Feed>()
         val rView = findViewById<RecyclerView>(R.id.rView)
 
-        val userProfileButton = findViewById<ImageButton>(R.id.action_bar_user_profile_button)
+        val userProfileButton = findViewById<ImageButton>(R.id.action_bar_home_button)
 
         userProfileButton.setOnClickListener {
             val intentUserProfile = Intent(this,
-                    UserProfileActivity::class.java)
+                    MainActivity::class.java)
             this.startActivity(intentUserProfile)
         }
 
@@ -37,6 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         StrictMode.setThreadPolicy(policy)
         prepareList(list)
+
 
         val adapter = CustomAdapter(this, list)
         rView.adapter = adapter
@@ -51,25 +56,15 @@ class MainActivity : AppCompatActivity() {
 
     }
     private fun prepareList(list : ArrayList<Feed>){
+        val response = instagram?.getUserFeed()
+        val items = response?.jsonObject?.getJSONArray("items")
 
-        val response = instagram?.getTimelineFeed()
-        val file = File(this.filesDir, "log.txt")
-
-        file.printWriter().use {out ->
-            out.println(response?.text)
-        }
-
-        val items = response?.jsonObject?.getJSONArray("feed_items")
-
-
-       var i = 0
+        var i = 0
         while (!items!!.isNull(i)) {
-            val itemPack = items.get(i) as JSONObject
+            val item = items.get(i) as JSONObject
 
-            if (itemPack.isNull("media_or_ad"))
+            if (item.isNull("image_versions2"))
                 continue
-
-            val item = itemPack.get("media_or_ad") as JSONObject
 
             val hasLiked = item.getBoolean("has_liked")
 
@@ -125,9 +120,9 @@ class MainActivity : AppCompatActivity() {
         okButton.setOnClickListener {
             dialog.dismiss()
             instagram?.logout()
-            val intentMain = Intent(this@MainActivity,
+            val intentMain = Intent(this,
                     LoginActivity::class.java)
-            this@MainActivity.startActivity(intentMain)
+            this.startActivity(intentMain)
         }
 
         cancelButton.setOnClickListener {

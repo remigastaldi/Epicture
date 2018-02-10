@@ -15,7 +15,7 @@ import android.widget.Toast
  */
 class LoginActivity : AppCompatActivity() {
     private var instagram: Instagram? = null
-    private var hitcounter = 0;
+    private var hitcounter = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

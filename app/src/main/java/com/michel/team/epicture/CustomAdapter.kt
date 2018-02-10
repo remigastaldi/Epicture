@@ -1,10 +1,9 @@
 package com.michel.team.epicture
 
 import android.content.Context
-import android.graphics.Color
 import android.support.v7.widget.CardView
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.PopupMenu
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,7 +37,9 @@ import com.squareup.picasso.Picasso
             holder.favoriteImageView.setOnClickListener {
                 Toast.makeText(context, "OK", Toast.LENGTH_SHORT).show()
             }
-            holder.titleTextView.text = feed.name;
+            if (feed.hasLiked)
+                holder.favoriteImageView.background = context.getDrawable(R.drawable.ic_action_favorite)
+            holder.titleTextView.text = feed.name
             holder.countTextView.text = "${feed.numOfLikes} likes"
             Picasso.with(context).load(feed.thumbnail).into(holder.thumbImageView);
 
@@ -53,7 +54,7 @@ import com.squareup.picasso.Picasso
         private fun showPopupMenu(view: View) {
             // inflate menu
             val popup = PopupMenu(context, view)
-            val inflater = popup.menuInflater
+            //val inflater = popup.menuInflater
 //            inflater.inflate(R.menu.menu_album, popup.getMenu())
             popup.setOnMenuItemClickListener(null)
             popup.show()
