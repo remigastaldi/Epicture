@@ -3,11 +3,15 @@ package com.michel.team.epicture
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.res.Configuration
+import android.content.res.Resources
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.os.StrictMode
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.Html
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -96,7 +100,7 @@ class MainActivity : AppCompatActivity() {
             else {
                 val caption = item.get("caption") as JSONObject
                 if (!caption.isNull("text")) {
-                    text = caption.getString("text")
+                    text = "<b>" + caption.getJSONObject("user").getString("username") + "</b> " +  caption.getString("text")
                 }
             }
 

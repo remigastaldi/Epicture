@@ -5,13 +5,13 @@ import android.graphics.Point
 import android.support.v7.widget.CardView
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
+import android.text.Html
 import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.squareup.picasso.Picasso
@@ -46,7 +46,13 @@ import com.squareup.picasso.Picasso
 
             if (feed.hasLiked)
                 holder.favoriteImageView.background = context.getDrawable(R.drawable.ic_action_favorite)
-            holder.titleTextView.text = feed.name
+
+            val text = feed.name
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                holder.titleTextView.text = Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY)
+            } else {
+                holder.titleTextView.text = Html.fromHtml(text)
+            }
             holder.countTextView.text = "${feed.numOfLikes} likes"
 
             val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
