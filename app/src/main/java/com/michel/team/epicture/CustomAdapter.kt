@@ -3,6 +3,7 @@ package com.michel.team.epicture
 import android.content.Context
 import android.graphics.Point
 import android.media.AudioManager.AUDIOFOCUS_NONE
+import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import android.support.v7.widget.CardView
@@ -90,6 +91,9 @@ import android.widget.*
                     val btn = holder.thumbVideoView
                     holder.playButton.visibility = ImageButton.INVISIBLE
                     btn.start()
+                }
+                holder.thumbVideoView.setOnPreparedListener { mp ->
+                        mp.setLooping(true)
                 }
                 holder.thumbVideoView.setOnTouchListener { v, event ->
                     val btn = holder.thumbVideoView
