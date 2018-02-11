@@ -122,7 +122,7 @@
                 android:id="@+id/like_counter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="#000"
                 android:textSize="@dimen/album_title"
                 android:text="0" />
 
@@ -132,7 +132,7 @@
                 android:layout_width="wrap_content"
                 android:padding="10dp"
                 android:text="@string/comment"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="#000"
                 android:textSize="14sp" />
 
 
