@@ -8,6 +8,7 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.os.StrictMode
 import android.support.v4.content.ContextCompat
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -68,6 +69,12 @@ class UserProfileActivity : AppCompatActivity() {
             rView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         }
 
+        val swipeRefreshLayout = findViewById<SwipeRefreshLayout>(R.id.refresh_layout)
+        swipeRefreshLayout.setOnRefreshListener {
+            refreshList()
+        }
+
+
         // Action Bar handler
         val view = supportActionBar!!.customView
         val exitButton = view.findViewById(R.id.logout_action) as ImageButton
@@ -81,12 +88,20 @@ class UserProfileActivity : AppCompatActivity() {
 
     }
 
+    fun refreshList() {
+        val size = list.size
+        list.clear()
+        adapter.notifyItemRangeRemoved(0, size)
+        prepareList(true)
+
+    }
+
     override fun onStart() {
-        prepareList()
+        prepareList(false)
         super.onStart()
     }
 
-    private fun prepareList(){
+    private fun prepareList(refreshed: Boolean){
 
         Thread(Runnable {
             val response = instagram?.getUserFeed()
@@ -137,6 +152,10 @@ class UserProfileActivity : AppCompatActivity() {
                 })
                 i++
             }
+            this.runOnUiThread({
+                val swipeRefreshLayout = findViewById<SwipeRefreshLayout>(R.id.refresh_layout)
+                swipeRefreshLayout.setRefreshing(false)
+            })
         }).start()
     }
 

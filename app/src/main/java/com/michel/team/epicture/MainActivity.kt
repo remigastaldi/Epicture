@@ -95,22 +95,20 @@ class MainActivity : AppCompatActivity() {
 
 
     fun refreshList() {
-        val swipeRefreshLayout = findViewById<SwipeRefreshLayout>(R.id.refresh_layout)
         val size = list.size
         list.clear()
         adapter.notifyItemRangeRemoved(0, size)
-        prepareList()
-        swipeRefreshLayout.setRefreshing(false)
+        prepareList(true)
 
     }
 
     override fun onStart() {
 
-        prepareList()
+        prepareList(false)
         super.onStart()
     }
 
-    private fun prepareList() {
+    private fun prepareList(refreshed: Boolean) {
 
         Thread(Runnable {
             var response = instagram?.getTimelineFeed()
@@ -170,6 +168,11 @@ class MainActivity : AppCompatActivity() {
                 })
                 i++
             }
+
+            this.runOnUiThread({
+                val swipeRefreshLayout = findViewById<SwipeRefreshLayout>(R.id.refresh_layout)
+                swipeRefreshLayout.setRefreshing(false)
+            })
         }).start()
     }
 
