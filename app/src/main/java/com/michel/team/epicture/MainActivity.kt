@@ -9,6 +9,7 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.os.StrictMode
 import android.support.v4.content.ContextCompat
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -73,6 +74,11 @@ class MainActivity : AppCompatActivity() {
             rView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         }
 
+        val swipeRefreshLayout = findViewById<SwipeRefreshLayout>(R.id.refresh_layout)
+        swipeRefreshLayout.setOnRefreshListener {
+            refreshList()
+        }
+
         // Action Bar handler
         val view = supportActionBar!!.customView
 
@@ -85,6 +91,17 @@ class MainActivity : AppCompatActivity() {
         photoButton.setOnClickListener({ v ->
             Toast.makeText(this,"Camera clicked" , Toast.LENGTH_LONG).show()
         })
+    }
+
+
+    fun refreshList() {
+        val swipeRefreshLayout = findViewById<SwipeRefreshLayout>(R.id.refresh_layout)
+        val size = list.size
+        list.clear()
+        adapter.notifyItemRangeRemoved(0, size)
+        prepareList()
+        swipeRefreshLayout.setRefreshing(false)
+
     }
 
     override fun onStart() {
