@@ -107,4 +107,9 @@ class Instagram(private var context: Context) {
     fun getUserFeed(): Response {
         return Req.prepare(Routes.userFeed(ds_user_id, "", ds_user_id)).send()
     }
+
+    fun likeContent(id: String): Response {
+        println("token is $token")
+        return Req.prepare(Routes.like(id, token), token).send()
+    }
 }

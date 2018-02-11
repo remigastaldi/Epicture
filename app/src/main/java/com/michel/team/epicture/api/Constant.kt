@@ -66,7 +66,7 @@ object Routes {
         return "media/${id}/comment/"
     }
 
-    fun like(id: String): String {
+    fun like(id: String, token: String): String {
         return "media/${id}/like/"
     }
 

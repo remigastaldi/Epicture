@@ -37,6 +37,7 @@ class Request {
             resp = if (persistedCookies == null) {
                 post(url, headers = headers, data = payload)
             } else {
+                println("====================================== $url, $headers, $payload, $persistedCookies")
                 post(url, headers = headers, data = payload, cookies = persistedCookies)
             }
         }

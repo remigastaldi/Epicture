@@ -51,6 +51,9 @@ import android.widget.*
             val feed : Feed = list[position]
 
             holder.favoriteImageView.setOnClickListener {
+                val req = InstagramApiContext.instagram?.likeContent("1710508171733092400")
+                println(req)
+                println(req?.text)
                 Toast.makeText(context, "OK", Toast.LENGTH_SHORT).show()
             }
 
@@ -75,7 +78,6 @@ import android.widget.*
 
             if (feed.type == 1) {
                 holder.thumbVideoView.visibility = VideoView.VISIBLE
-
                 holder.thumbVideoView.layoutParams.height = imageHeight.toInt()
                 holder.thumbVideoView.layoutParams.width = size.x
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
