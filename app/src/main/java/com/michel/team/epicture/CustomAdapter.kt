@@ -86,10 +86,7 @@ class CustomAdapter(private val context: Context, private val list: List<Feed>) 
                 holder.thumbVideoView.layoutParams.height = imageHeight.toInt()
                 holder.thumbVideoView.layoutParams.width = size.x
                 holder.thumbVideoView.start()
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    holder.thumbVideoView.setAudioFocusRequest(AUDIOFOCUS_NONE)
-                }
+                
                 holder.thumbVideoView.setOnPreparedListener { mp ->
                     mp.isLooping = true
                 }
