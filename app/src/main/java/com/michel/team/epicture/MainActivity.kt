@@ -1,6 +1,5 @@
 package com.michel.team.epicture
 
-import android.app.ActionBar
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.res.Configuration
@@ -13,23 +12,12 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.Menu
-import android.view.MenuItem
-import com.squareup.picasso.Downloader
-import khttp.responses.Response
-import org.json.JSONObject
-import java.io.File
-import kotlin.concurrent.thread
-import android.text.Spannable
-import android.text.style.TypefaceSpan
-import android.text.SpannableString
-import android.view.View
 import android.widget.*
-
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
     private var instagram = InstagramApiContext.instagram
-    val list = ArrayList<Feed>()
+    private val list = ArrayList<Feed>()
     private var adapter = CustomAdapter(this, list)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,11 +27,11 @@ class MainActivity : AppCompatActivity() {
         val rView = findViewById<RecyclerView>(R.id.rView)
 
         // Set Custom Menu
-        val action = getSupportActionBar()
+        val action = supportActionBar
         action?.setDisplayShowCustomEnabled(true)
         action?.setCustomView(R.layout.custom_menu)
 
-        val textView = findViewById(R.id.app_title) as TextView
+        val textView = findViewById<TextView>(R.id.app_title)
         val typeface = Typeface.createFromAsset(assets, "fonts/Billabong.ttf")
         textView.typeface = typeface
 
@@ -80,14 +68,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Action Bar handler
-        val view = supportActionBar!!.customView
+        val view = this.supportActionBar?.customView
 
-        val exitButton = view.findViewById(R.id.logout_action) as ImageButton
+        val exitButton = view?.findViewById(R.id.logout_action) as ImageButton
         exitButton.setOnClickListener({ v ->
             logoutDialog()
         })
 
-        val photoButton = view.findViewById(R.id.camera_action) as ImageButton
+        val photoButton = view?.findViewById(R.id.camera_action) as ImageButton
         photoButton.setOnClickListener({ v ->
             Toast.makeText(this,"Camera clicked" , Toast.LENGTH_LONG).show()
         })
@@ -98,20 +86,83 @@ class MainActivity : AppCompatActivity() {
         val size = list.size
         list.clear()
         adapter.notifyItemRangeRemoved(0, size)
-        prepareList(true)
+        prepareFeedList()
 
     }
 
     override fun onStart() {
-
-        prepareList(false)
+        prepareFeedList()
         super.onStart()
     }
 
-    private fun prepareList(refreshed: Boolean) {
+    private fun prepareSearchList(param: String) {
+        Thread(Runnable {
+            val response = instagram?.tagFeed(param)
+
+            val items = response?.jsonObject?.getJSONArray("items")
+
+            var i = 0
+            while (!items!!.isNull(i)) {
+                val item = items.get(i) as JSONObject
+
+                if (item.isNull("image_versions2")) {
+                    i++
+                    continue
+                }
+
+                val hasLiked = item.getBoolean("has_liked")
+
+                val images = item.get("image_versions2") as JSONObject
+                val candidates = images.getJSONArray("candidates")
+                val image1 = candidates.get(0) as JSONObject
+                val url = image1.getString("url")
+                val imageWidth = image1.getInt("width")
+                val imageHeight = image1.getInt("height")
+
+                val username = item.getJSONObject("user").getString("username")
+                val user_pic = item.getJSONObject("user").getString("profile_pic_url")
+                var text = ""
+                if (item.isNull("caption")) {
+                    val comments = item.getJSONArray("preview_comments")
+                    if (!comments.isNull(0)) {
+                        val comment = comments.get(0) as JSONObject
+                        text = "<b>" + comment.getJSONObject("user").getString("username") + "</b> " +  comment.getString("text")
+                    }
+                }
+                else {
+                    val caption = item.get("caption") as JSONObject
+                    if (!caption.isNull("text")) {
+                        text = "<b>" + username + "</b> " +  caption.getString("text")
+                    }
+                }
+
+
+                val likes = item.getInt("like_count")
+
+                if (item.getInt("media_type") == 2) {
+                    val urlvideo = item.getJSONArray("video_versions").get(0) as JSONObject
+                    list.add(Feed(username, user_pic, imageWidth, imageHeight, text, likes, hasLiked, urlvideo.getString("url"), 1, false))
+
+                } else {
+                    list.add(Feed(username, user_pic, imageWidth, imageHeight, text, likes, hasLiked, url, 0, false))
+                }
+
+                this.runOnUiThread({
+                    adapter.notifyItemInserted(list.size)
+                })
+                i++
+            }
+            this.runOnUiThread({
+                val swipeRefreshLayout = findViewById<SwipeRefreshLayout>(R.id.refresh_layout)
+                swipeRefreshLayout.setRefreshing(false)
+            })
+        }).start()
+    }
+
+    private fun prepareFeedList() {
 
         Thread(Runnable {
-            var response = instagram?.getTimelineFeed()
+            val response  = instagram?.getTimelineFeed()
 
 
             val items = response?.jsonObject?.getJSONArray("feed_items")
