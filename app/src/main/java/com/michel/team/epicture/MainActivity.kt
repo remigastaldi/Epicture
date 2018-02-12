@@ -39,10 +39,11 @@ class MainActivity : AppCompatActivity() {
         userProfileButton.background.clearColorFilter()
         val backButtonUserProfileButton = findViewById<LinearLayout>(R.id.back_button_action_bar_user_profile_button)
         backButtonUserProfileButton.setOnClickListener {
-            val intentUserProfile = Intent(this,
+          /*  val intentUserProfile = Intent(this,
                     UserProfileActivity::class.java)
             intentUserProfile.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
-            this.startActivity(intentUserProfile)
+            this.startActivity(intentUserProfile) */
+            prepareUserFeedList()
         }
 
         val homeButton = findViewById<ImageView>(R.id.action_bar_home_button)
@@ -64,7 +65,20 @@ class MainActivity : AppCompatActivity() {
 
         val swipeRefreshLayout = findViewById<SwipeRefreshLayout>(R.id.refresh_layout)
         swipeRefreshLayout.setOnRefreshListener {
-            refreshList()
+            when (status) {
+                STATUS.FEED -> {
+                    prepareFeedList()
+                }
+                STATUS.SEARCH -> {
+                    // prepareSearchList()
+                }
+                STATUS.ADD -> {
+                }
+                STATUS.FAVORITES -> {
+                }
+                STATUS.PROFILE -> {
+                }
+            }
         }
 
         // Set Custom Menu
@@ -93,12 +107,10 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun refreshList() {
+    fun clearList() {
         val size = list.size
         list.clear()
         adapter.notifyItemRangeRemoved(0, size)
-        prepareFeedList()
-
     }
 
     override fun onStart() {
@@ -150,11 +162,42 @@ class MainActivity : AppCompatActivity() {
             adapter.notifyItemInserted(list.size)
         })
     }
+
+    private fun prepareUserFeedList() {
+        Thread(Runnable {
+            val response = InstagramApiContext.instagram?.getUserFeed()
+            val items = response?.jsonObject?.getJSONArray("items")
+
+            this.runOnUiThread({
+                clearList()
+            })
+
+            var i = 0
+            while (!items!!.isNull(i)) {
+                val item = items.get(i) as JSONObject
+
+                if (item.isNull("image_versions2")) {
+                    i++
+                    continue
+                }
+                addCard(item)
+                i++
+            }
+            this.runOnUiThread({
+                val swipeRefreshLayout = findViewById<SwipeRefreshLayout>(R.id.refresh_layout)
+                swipeRefreshLayout.isRefreshing = false
+            })
+        }).start()
+    }
+
     private fun prepareSearchList(param: String) {
         Thread(Runnable {
             val response = instagram?.tagFeed(param)
-
             val items = response?.jsonObject?.getJSONArray("items") as JSONArray
+
+            this.runOnUiThread({
+                clearList()
+            })
 
             var i = 0
             while (!items.isNull(i)) {
@@ -180,10 +223,11 @@ class MainActivity : AppCompatActivity() {
 
         Thread(Runnable {
             val response  = instagram?.getTimelineFeed()
-
-
             val items = response?.jsonObject?.getJSONArray("feed_items") as JSONArray
 
+            this.runOnUiThread({
+                clearList()
+            })
 
             var i = 0
             while (!items.isNull(i)) {
