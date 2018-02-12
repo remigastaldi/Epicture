@@ -35,18 +35,28 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val rView = findViewById<RecyclerView>(R.id.rView)
 
-        val userProfileButton = findViewById<ImageView>(R.id.action_bar_user_profile_button)
-        userProfileButton.background.clearColorFilter()
+        val homeButton = findViewById<ImageView>(R.id.action_bar_home_button)
+        homeButton.background.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.MULTIPLY)
+        val backButtonHomeButton = findViewById<LinearLayout>(R.id.back_button_action_bar_home_button)
+        backButtonHomeButton.setOnClickListener {
+            prepareFeedList()
+        }
+
+        val backButtonSearchButton = findViewById<LinearLayout>(R.id.back_button_action_bar_search_button)
+        backButtonSearchButton.setOnClickListener {
+            // prepareSearchList()
+        }
+
+        val backButtonFavoritesButton = findViewById<LinearLayout>(R.id.back_button_action_bar_favorite_button)
+        backButtonFavoritesButton.setOnClickListener {
+            // prepareFavorites()
+        }
+
         val backButtonUserProfileButton = findViewById<LinearLayout>(R.id.back_button_action_bar_user_profile_button)
         backButtonUserProfileButton.setOnClickListener {
             prepareUserFeedList()
         }
 
-        val homeButton = findViewById<ImageView>(R.id.action_bar_home_button)
-        homeButton.background.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.MULTIPLY)
-        homeButton.setOnClickListener {
-            prepareFeedList()
-        }
 
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
 
