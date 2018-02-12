@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
             randomSearch = true
             changeStatus(status, STATUS.SEARCH)
             val source = "abcdefghijklmnopqrstuvwxyz"
-            searchString += source[Math.floor(Math.random() * source.length).toInt()]
+            searchString = source[Math.floor(Math.random() * source.length).toInt()].toString()
             prepareSearchList(searchString)
         }
 
@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
                         prepareSearchList(searchString)
                     } else {
                         val source = "abcdefghijklmnopqrstuvwxyz"
-                        searchString += source[Math.floor(Math.random() * source.length).toInt()]
+                        searchString = source[Math.floor(Math.random() * source.length).toInt()].toString()
                         prepareSearchList(searchString)
                     }
                 }
