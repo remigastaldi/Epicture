@@ -13,12 +13,21 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.*
+import org.json.JSONArray
 import org.json.JSONObject
 
+enum class STATUS {
+    FEED,
+    SEARCH,
+    ADD,
+    FAVORITES,
+    PROFILE
+}
 class MainActivity : AppCompatActivity() {
     private var instagram = InstagramApiContext.instagram
     private val list = ArrayList<Feed>()
     private var adapter = CustomAdapter(this, list)
+    private var status = STATUS.FEED
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
