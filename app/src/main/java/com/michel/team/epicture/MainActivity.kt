@@ -145,10 +145,10 @@ class MainActivity : AppCompatActivity() {
         Thread(Runnable {
             val response = instagram?.tagFeed(param)
 
-            val items = response?.jsonObject?.getJSONArray("items")
+            val items = response?.jsonObject?.getJSONArray("items") as JSONArray
 
             var i = 0
-            while (!items!!.isNull(i)) {
+            while (!items.isNull(i)) {
                 val item = items.get(i) as JSONObject
 
                 if (item.isNull("image_versions2")) {
@@ -173,11 +173,11 @@ class MainActivity : AppCompatActivity() {
             val response  = instagram?.getTimelineFeed()
 
 
-            val items = response?.jsonObject?.getJSONArray("feed_items")
+            val items = response?.jsonObject?.getJSONArray("feed_items") as JSONArray
 
 
             var i = 0
-            while (!items!!.isNull(i)) {
+            while (!items.isNull(i)) {
                 val itemPack = items.get(i) as JSONObject
 
                 if (itemPack.isNull("media_or_ad")) {
