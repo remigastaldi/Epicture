@@ -116,4 +116,8 @@ class Instagram(private var context: Context) {
     fun tagFeed(tag: String): Response {
         return Req.prepare(Routes.tagFeed(tag, "", rankToken)).send()
     }
+    
+    fun hashtagsSearch(query: String): Response {
+        return Req.prepare(Routes.hashtagsSearch(query, rankToken)).send()
+    }
 }
