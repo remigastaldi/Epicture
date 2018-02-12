@@ -112,4 +112,8 @@ class Instagram(private var context: Context) {
         println("token is $token")
         return Req.prepare(Routes.like(id, token), token).send()
     }
+
+    fun tagFeed(tag: String): Response {
+        return Req.prepare(Routes.tagFeed(tag, "", rankToken)).send()
+    }
 }
