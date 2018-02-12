@@ -56,10 +56,11 @@ class MainActivity : AppCompatActivity() {
 
         val backButtonSearchButton = findViewById<LinearLayout>(R.id.back_button_action_bar_search_button)
         backButtonSearchButton.setOnClickListener {
+            randomSearch = true
+            changeStatus(status, STATUS.SEARCH)
             val source = "abcdefghijklmnopqrstuvwxyz"
             searchString += source[Math.floor(Math.random() * source.length).toInt()]
             prepareSearchList(searchString)
-            changeStatus(status, STATUS.SEARCH)
         }
 
         val backButtonFavoritesButton = findViewById<LinearLayout>(R.id.back_button_action_bar_favorite_button)
@@ -180,9 +181,9 @@ class MainActivity : AppCompatActivity() {
         searchInput.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 if (!searchInput.text.isEmpty()) {
+                    randomSearch = false
                     searchString = searchInput.text.toString()
                     prepareSearchList(searchString)
-                    randomSearch = false
                 }
                 val view = this.currentFocus
                 if (view != null) {
@@ -223,7 +224,6 @@ class MainActivity : AppCompatActivity() {
             }
 
             STATUS.SEARCH -> {
-                randomSearch = true
                 searchButton.background.clearColorFilter()
                 changeMenuBarToHome()
             }
@@ -248,7 +248,6 @@ class MainActivity : AppCompatActivity() {
             STATUS.SEARCH -> {
                 searchButton.background.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.MULTIPLY)
                 changeMenuBarToSearch()
-                clearList()
             }
 
             STATUS.ADD -> {
