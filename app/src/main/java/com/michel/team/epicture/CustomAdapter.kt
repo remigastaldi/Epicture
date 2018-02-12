@@ -75,13 +75,10 @@ class CustomAdapter(private val context: Context, private val list: List<Feed>) 
         val imageHeight = (size.x / feed.imageWidth.toFloat()) * feed.imageHeight
 
         if (feed.type == 1) {
-            println("Contructor")
             holder.playButton.visibility = ImageButton.VISIBLE
             holder.thumbVideoView.visibility = VideoView.GONE
 
             holder.playButton.setOnClickListener { event ->
-                println("Start Button Clicked")
-
                 holder.playButton.visibility = Button.GONE
                 holder.thumbImageView.visibility = ImageView.GONE
                 holder.thumbVideoView.visibility = VideoView.VISIBLE
@@ -116,11 +113,16 @@ class CustomAdapter(private val context: Context, private val list: List<Feed>) 
                 }
 
             }
+            
+            if (!feed.hasAudio) {
+                holder.videoFeedMuted.visibility = ImageView.VISIBLE
+            }
         } else {
             holder.thumbVideoView.visibility = VideoView.GONE
             holder.playButton.visibility = Button.GONE
             holder.videoFeedMuted.visibility = ImageView.GONE
         }
+
 
 
         holder.thumbImageView.visibility = ImageView.VISIBLE

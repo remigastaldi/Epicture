@@ -307,7 +307,9 @@ class MainActivity : AppCompatActivity() {
 
         if (item.getInt("media_type") == 2) {
             val urlvideo = item.getJSONArray("video_versions").get(0) as JSONObject
-            val hasAudio = !item.isNull("has_audio")
+            var hasAudio = false;
+            if (!item.isNull("has_audio"))
+                hasAudio = item.getBoolean("has_audio")
             list.add(Feed(username, user_pic, imageWidth, imageHeight, text, likes, hasLiked, url, urlvideo.getString("url"), 1, hasAudio))
 
         } else {
