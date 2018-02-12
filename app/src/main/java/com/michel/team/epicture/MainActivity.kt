@@ -44,6 +44,9 @@ class MainActivity : AppCompatActivity() {
 
         val homeButton = findViewById<ImageView>(R.id.action_bar_home_button)
         homeButton.background.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.MULTIPLY)
+        homeButton.setOnClickListener {
+            prepareFeedList()
+        }
 
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
 
@@ -65,14 +68,19 @@ class MainActivity : AppCompatActivity() {
                 STATUS.FEED -> {
                     prepareFeedList()
                 }
+
                 STATUS.SEARCH -> {
                     // prepareSearchList()
                 }
+
                 STATUS.ADD -> {
                 }
+
                 STATUS.FAVORITES -> {
                 }
+
                 STATUS.PROFILE -> {
+                    prepareUserFeedList()
                 }
             }
         }
@@ -112,6 +120,53 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         prepareFeedList()
         super.onStart()
+    }
+
+    private fun changeStatus(from: STATUS, to: STATUS) {
+        val userProfileButton = findViewById<ImageView>(R.id.action_bar_user_profile_button)
+        val homeButton = findViewById<ImageView>(R.id.action_bar_home_button)
+
+        when (from) {
+            STATUS.FEED -> {
+                homeButton.background.clearColorFilter()
+            }
+
+            STATUS.SEARCH -> {
+                // prepareSearchList()
+            }
+
+            STATUS.ADD -> {
+            }
+
+            STATUS.FAVORITES -> {
+            }
+
+            STATUS.PROFILE -> {
+                userProfileButton.background.clearColorFilter()
+            }
+        }
+
+        when (to) {
+            STATUS.FEED -> {
+                homeButton.background.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.MULTIPLY)
+            }
+
+            STATUS.SEARCH -> {
+                // prepareSearchList()
+            }
+
+            STATUS.ADD -> {
+            }
+
+            STATUS.FAVORITES -> {
+            }
+
+            STATUS.PROFILE -> {
+                userProfileButton.background.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.MULTIPLY)
+            }
+        }
+
+        status = to
     }
 
     private fun addCard(item: JSONObject) {
@@ -160,14 +215,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun prepareUserFeedList() {
-        status = STATUS.FEED
+        changeStatus(status, STATUS.PROFILE)
+        clearList()
+
         Thread(Runnable {
             val response = InstagramApiContext.instagram?.getUserFeed()
             val items = response?.jsonObject?.getJSONArray("items")
 
-            this.runOnUiThread({
-                clearList()
-            })
 
             var i = 0
             while (!items!!.isNull(i)) {
@@ -188,14 +242,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun prepareSearchList(param: String) {
-        status = STATUS.SEARCH
+        changeStatus(status, STATUS.SEARCH)
+        clearList()
+
         Thread(Runnable {
             val response = instagram?.tagFeed(param)
             val items = response?.jsonObject?.getJSONArray("items") as JSONArray
 
-            this.runOnUiThread({
-                clearList()
-            })
 
             var i = 0
             while (!items.isNull(i)) {
@@ -218,14 +271,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun prepareFeedList() {
-        status = STATUS.PROFILE
+        changeStatus(status, STATUS.FEED)
+        clearList()
+
         Thread(Runnable {
             val response  = instagram?.getTimelineFeed()
             val items = response?.jsonObject?.getJSONArray("feed_items") as JSONArray
-
-            this.runOnUiThread({
-                clearList()
-            })
 
             var i = 0
             while (!items.isNull(i)) {
