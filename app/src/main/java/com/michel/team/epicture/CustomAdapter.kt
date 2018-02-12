@@ -14,8 +14,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.*
 import com.squareup.picasso.Picasso
-import android.media.MediaPlayer
-import kotlinx.android.synthetic.main.activity_feed.view.*
 
 
 /**
@@ -49,14 +47,16 @@ class CustomAdapter(private val context: Context, private val list: List<Feed>) 
         val feed: Feed = list[position]
 
         holder.favoriteImageView.setOnClickListener {
-            val req = InstagramApiContext.instagram?.likeContent("1710508171733092400")
+          /*  val req = InstagramApiContext.instagram?.likeContent("1710508171733092400")
             println(req)
-            println(req?.text)
+            println(req?.text) */
             Toast.makeText(context, "OK", Toast.LENGTH_SHORT).show()
         }
 
         if (feed.hasLiked)
             holder.favoriteImageView.background = context.getDrawable(R.drawable.ic_action_favorite)
+        else
+            holder.favoriteImageView.background = context.getDrawable(R.drawable.ic_action_favorite_border_black)
 
         val text = feed.name
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {

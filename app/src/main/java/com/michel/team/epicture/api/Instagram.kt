@@ -105,12 +105,15 @@ class Instagram(private var context: Context) {
     }
 
     fun getUserFeed(): Response {
-        return Req.prepare(Routes.userFeed(ds_user_id, "", ds_user_id)).send()
+        return Req.prepare(Routes.userFeed(ds_user_id, "", rankToken)).send()
     }
 
     fun likeContent(id: String): Response {
         println("token is $token")
-        return Req.prepare(Routes.like(id), token).send()
+        println("id is $uuid")
+        println("ranktoken is $rankToken")
+        println("ds_user_id is $ds_user_id")
+        return Req.prepare(Routes.like(id), "access_token=$token").send()
     }
 
     fun tagFeed(tag: String): Response {
@@ -123,5 +126,9 @@ class Instagram(private var context: Context) {
 
     fun selfLikedFeed(): Response {
         return Req.prepare(Routes.selfLikedFeed("")).send()
+    }
+
+    fun commentContent(id: String, comment: String): Response {
+        return Req.prepare(Routes.comment(id), "access_token=$token&text=$comment").send()
     }
 }

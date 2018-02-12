@@ -279,9 +279,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun addCard(item: JSONObject) {
 
-        val hasLiked = if (item.isNull("has_liked") && status != STATUS.FAVORITES) {
-            false
-        } else if (status == STATUS.FAVORITES) {
+        val hasLiked = if (status == STATUS.FAVORITES) {
             true
         }
         else {
