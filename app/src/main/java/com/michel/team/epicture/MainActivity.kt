@@ -135,6 +135,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun changeStatus(from: STATUS, to: STATUS) {
         val userProfileButton = findViewById<ImageView>(R.id.action_bar_user_profile_button)
+        val searchButton = findViewById<ImageView>(R.id.action_bar_search_button)
         val homeButton = findViewById<ImageView>(R.id.action_bar_home_button)
         val favoritesButton = findViewById<ImageView>(R.id.action_bar_favorite_button)
 
@@ -144,7 +145,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             STATUS.SEARCH -> {
-                // prepareSearchList()
+                searchButton.background.clearColorFilter()
             }
 
             STATUS.ADD -> {
@@ -165,7 +166,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             STATUS.SEARCH -> {
-                // prepareSearchList()
+                searchButton.background.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.MULTIPLY)
             }
 
             STATUS.ADD -> {
