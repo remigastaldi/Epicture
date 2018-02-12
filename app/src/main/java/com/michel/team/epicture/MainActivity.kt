@@ -97,6 +97,50 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
     }
 
+    private fun addCard(item: JSONObject) {
+
+        val hasLiked = item.getBoolean("has_liked")
+
+        val images = item.get("image_versions2") as JSONObject
+        val candidates = images.getJSONArray("candidates")
+        val image1 = candidates.get(0) as JSONObject
+        val url = image1.getString("url")
+        val imageWidth = image1.getInt("width")
+        val imageHeight = image1.getInt("height")
+
+        val username = item.getJSONObject("user").getString("username")
+        val user_pic = item.getJSONObject("user").getString("profile_pic_url")
+        var text = ""
+        if (item.isNull("caption")) {
+            val comments = item.getJSONArray("preview_comments")
+            if (!comments.isNull(0)) {
+                val comment = comments.get(0) as JSONObject
+                text = "<b>" + comment.getJSONObject("user").getString("username") + "</b> " +  comment.getString("text")
+            }
+        }
+        else {
+            val caption = item.get("caption") as JSONObject
+            if (!caption.isNull("text")) {
+                text = "<b>" + username + "</b> " +  caption.getString("text")
+            }
+        }
+
+
+        val likes = item.getInt("like_count")
+
+        if (item.getInt("media_type") == 2) {
+            val urlvideo = item.getJSONArray("video_versions").get(0) as JSONObject
+            val hasAudio = !item.isNull("has_audio")
+            list.add(Feed(username, user_pic, imageWidth, imageHeight, text, likes, hasLiked, urlvideo.getString("url"), 1, hasAudio))
+
+        } else {
+            list.add(Feed(username, user_pic, imageWidth, imageHeight, text, likes, hasLiked, url, 0, false))
+        }
+
+        this.runOnUiThread({
+            adapter.notifyItemInserted(list.size)
+        })
+    }
     private fun prepareSearchList(param: String) {
         Thread(Runnable {
             val response = instagram?.tagFeed(param)
@@ -112,51 +156,13 @@ class MainActivity : AppCompatActivity() {
                     continue
                 }
 
-                val hasLiked = item.getBoolean("has_liked")
-
-                val images = item.get("image_versions2") as JSONObject
-                val candidates = images.getJSONArray("candidates")
-                val image1 = candidates.get(0) as JSONObject
-                val url = image1.getString("url")
-                val imageWidth = image1.getInt("width")
-                val imageHeight = image1.getInt("height")
-
-                val username = item.getJSONObject("user").getString("username")
-                val user_pic = item.getJSONObject("user").getString("profile_pic_url")
-                var text = ""
-                if (item.isNull("caption")) {
-                    val comments = item.getJSONArray("preview_comments")
-                    if (!comments.isNull(0)) {
-                        val comment = comments.get(0) as JSONObject
-                        text = "<b>" + comment.getJSONObject("user").getString("username") + "</b> " +  comment.getString("text")
-                    }
-                }
-                else {
-                    val caption = item.get("caption") as JSONObject
-                    if (!caption.isNull("text")) {
-                        text = "<b>" + username + "</b> " +  caption.getString("text")
-                    }
-                }
-
-
-                val likes = item.getInt("like_count")
-
-                if (item.getInt("media_type") == 2) {
-                    val urlvideo = item.getJSONArray("video_versions").get(0) as JSONObject
-                    list.add(Feed(username, user_pic, imageWidth, imageHeight, text, likes, hasLiked, urlvideo.getString("url"), 1, false))
-
-                } else {
-                    list.add(Feed(username, user_pic, imageWidth, imageHeight, text, likes, hasLiked, url, 0, false))
-                }
-
-                this.runOnUiThread({
-                    adapter.notifyItemInserted(list.size)
-                })
+                addCard(item)
                 i++
             }
+
             this.runOnUiThread({
                 val swipeRefreshLayout = findViewById<SwipeRefreshLayout>(R.id.refresh_layout)
-                swipeRefreshLayout.setRefreshing(false)
+                swipeRefreshLayout.isRefreshing = false
             })
         }).start()
     }
@@ -181,50 +187,13 @@ class MainActivity : AppCompatActivity() {
 
                 val item = itemPack.get("media_or_ad") as JSONObject
 
-                val hasLiked = item.getBoolean("has_liked")
-
-                val images = item.get("image_versions2") as JSONObject
-                val candidates = images.getJSONArray("candidates")
-                val image1 = candidates.get(0) as JSONObject
-                val url = image1.getString("url")
-                val imageWidth = image1.getInt("width")
-                val imageHeight = image1.getInt("height")
-
-                val username = item.getJSONObject("user").getString("username")
-                val user_pic = item.getJSONObject("user").getString("profile_pic_url")
-                var text = ""
-                if (item.isNull("caption")) {
-                    val comments = item.getJSONArray("preview_comments")
-                    if (!comments.isNull(0)) {
-                        val comment = comments.get(0) as JSONObject
-                        text = "<b>" + comment.getJSONObject("user").getString("username") + "</b> " + comment.getString("text")
-                    }
-                } else {
-                    val caption = item.get("caption") as JSONObject
-                    if (!caption.isNull("text")) {
-                        text = "<b>" + username + "</b> " + caption.getString("text")
-                    }
-                }
-
-                val likes = item.getInt("like_count")
-
-                if (item.getInt("media_type") == 2) {
-                    val urlvideo = item.getJSONArray("video_versions").get(0) as JSONObject
-                    list.add(Feed(username, user_pic, imageWidth, imageHeight, text, likes, hasLiked, urlvideo.getString("url"), 1, item.getBoolean("has_audio")))
-
-                } else {
-                    list.add(Feed(username, user_pic, imageWidth, imageHeight, text, likes, hasLiked, url, 0, false))
-                }
-
-                this.runOnUiThread({
-                    adapter.notifyItemInserted(list.size)
-                })
+                addCard(item)
                 i++
             }
 
             this.runOnUiThread({
                 val swipeRefreshLayout = findViewById<SwipeRefreshLayout>(R.id.refresh_layout)
-                swipeRefreshLayout.setRefreshing(false)
+                swipeRefreshLayout.isRefreshing = false
             })
         }).start()
     }

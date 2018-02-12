@@ -110,7 +110,7 @@ class Instagram(private var context: Context) {
 
     fun likeContent(id: String): Response {
         println("token is $token")
-        return Req.prepare(Routes.like(id, token), token).send()
+        return Req.prepare(Routes.like(id), token).send()
     }
 
     fun tagFeed(tag: String): Response {
@@ -119,5 +119,9 @@ class Instagram(private var context: Context) {
     
     fun hashtagsSearch(query: String): Response {
         return Req.prepare(Routes.hashtagsSearch(query, rankToken)).send()
+    }
+
+    fun selfLikedFeed(max_id: String): Response {
+        return Req.prepare(Routes.selfLikedFeed("")).send()
     }
 }
