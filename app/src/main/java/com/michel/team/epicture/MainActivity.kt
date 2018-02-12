@@ -26,15 +26,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val rView = findViewById<RecyclerView>(R.id.rView)
 
-        // Set Custom Menu
-        val action = supportActionBar
-        action?.setDisplayShowCustomEnabled(true)
-        action?.setCustomView(R.layout.custom_menu)
-
-        val textView = findViewById<TextView>(R.id.app_title)
-        val typeface = Typeface.createFromAsset(assets, "fonts/Billabong.ttf")
-        textView.typeface = typeface
-
         val userProfileButton = findViewById<ImageView>(R.id.action_bar_user_profile_button)
         userProfileButton.background.clearColorFilter()
         val backButtonUserProfileButton = findViewById<LinearLayout>(R.id.back_button_action_bar_user_profile_button)
@@ -67,6 +58,16 @@ class MainActivity : AppCompatActivity() {
             refreshList()
         }
 
+        // Set Custom Menu
+        val action = supportActionBar
+        action?.setDisplayShowCustomEnabled(true)
+        action?.setCustomView(R.layout.search_menu)
+
+        /*
+        val textView = findViewById<TextView>(R.id.app_title)
+        val typeface = Typeface.createFromAsset(assets, "fonts/Billabong.ttf")
+        textView.typeface = typeface
+
         // Action Bar handler
         val view = this.supportActionBar?.customView
 
@@ -79,6 +80,7 @@ class MainActivity : AppCompatActivity() {
         photoButton.setOnClickListener({ v ->
             Toast.makeText(this,"Camera clicked" , Toast.LENGTH_LONG).show()
         })
+        */
     }
 
 

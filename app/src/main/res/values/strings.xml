@@ -17,4 +17,5 @@
     <string name="home_button_action_bar_main">home_button_action_bar_main</string>
     <string name="profil_button_action_bar_main">profil_button_action_bar_main </string>
     <string name="add_button_action_bar_main">add_button_action_bar_main</string>
+    <string name="search_input">Search</string>
 </resources>

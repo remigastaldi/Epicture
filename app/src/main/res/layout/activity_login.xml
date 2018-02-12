@@ -99,7 +99,7 @@
                 android:fontFamily="sans-serif"
                 android:paddingTop="3dp"
                 android:text="@string/forgot_password"
-                android:textSize="12dp" />
+                android:textSize="12sp" />
         </LinearLayout>
     </RelativeLayout>
 
