@@ -119,6 +119,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         changeMenuBarToHome()
+
+
     }
 
 
@@ -306,10 +308,10 @@ class MainActivity : AppCompatActivity() {
         if (item.getInt("media_type") == 2) {
             val urlvideo = item.getJSONArray("video_versions").get(0) as JSONObject
             val hasAudio = !item.isNull("has_audio")
-            list.add(Feed(username, user_pic, imageWidth, imageHeight, text, likes, hasLiked, urlvideo.getString("url"), 1, hasAudio))
+            list.add(Feed(username, user_pic, imageWidth, imageHeight, text, likes, hasLiked, url, urlvideo.getString("url"), 1, hasAudio))
 
         } else {
-            list.add(Feed(username, user_pic, imageWidth, imageHeight, text, likes, hasLiked, url, 0, false))
+            list.add(Feed(username, user_pic, imageWidth, imageHeight, text, likes, hasLiked, url, "", 0, false))
         }
 
         this.runOnUiThread({
