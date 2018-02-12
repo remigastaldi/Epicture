@@ -39,10 +39,6 @@ class MainActivity : AppCompatActivity() {
         userProfileButton.background.clearColorFilter()
         val backButtonUserProfileButton = findViewById<LinearLayout>(R.id.back_button_action_bar_user_profile_button)
         backButtonUserProfileButton.setOnClickListener {
-          /*  val intentUserProfile = Intent(this,
-                    UserProfileActivity::class.java)
-            intentUserProfile.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
-            this.startActivity(intentUserProfile) */
             prepareUserFeedList()
         }
 
@@ -164,6 +160,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun prepareUserFeedList() {
+        status = STATUS.FEED
         Thread(Runnable {
             val response = InstagramApiContext.instagram?.getUserFeed()
             val items = response?.jsonObject?.getJSONArray("items")
@@ -191,6 +188,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun prepareSearchList(param: String) {
+        status = STATUS.SEARCH
         Thread(Runnable {
             val response = instagram?.tagFeed(param)
             val items = response?.jsonObject?.getJSONArray("items") as JSONArray
@@ -220,7 +218,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun prepareFeedList() {
-
+        status = STATUS.PROFILE
         Thread(Runnable {
             val response  = instagram?.getTimelineFeed()
             val items = response?.jsonObject?.getJSONArray("feed_items") as JSONArray
