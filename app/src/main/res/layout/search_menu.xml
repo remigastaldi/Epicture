@@ -1,35 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="40dp"
     android:orientation="horizontal"
-    >
-
-   <LinearLayout
-       android:layout_height="wrap_content"
-       android:layout_width="wrap_content"
-       android:layout_gravity="center"
-       android:paddingStart="16dp"
-       android:paddingEnd="16dp"
-       android:orientation="horizontal"
-       >
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp">
 
 
-       <android.support.design.widget.TextInputEditText
-           android:id="@+id/login_input"
-           android:layout_width="0dp"
-           android:layout_height="wrap_content"
-           android:singleLine="true"
-           android:hint="@string/search_input"
-           android:inputType="text"
-           android:layout_weight="1"/>
+    <RelativeLayout
+        android:id="@+id/search_form"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="@android:drawable/editbox_background"
+        android:layout_weight="1">
 
-       <Button
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           style="?android:attr/borderlessButtonStyle"
-           android:text="@string/cancel"/>
+        <EditText
+            android:id="@+id/search_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/search_input"
+            android:inputType="text"
+            android:imeOptions="actionSearch"
+            android:background="@null"
+            android:gravity="center"
+            android:drawableStart="@drawable/ic_action_search"
+            />
+    </RelativeLayout>
 
-   </LinearLayout>
 
-</TableLayout>
+    <Button
+        android:id="@+id/cancel_search_button"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="@string/cancel" />
+
+</LinearLayout>

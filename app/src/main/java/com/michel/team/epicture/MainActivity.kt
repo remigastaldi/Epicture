@@ -15,7 +15,22 @@ import android.support.v7.widget.RecyclerView
 import android.widget.*
 import org.json.JSONArray
 import org.json.JSONObject
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.EditText
+import android.view.inputmethod.EditorInfo
+import android.view.KeyEvent
+import android.widget.TextView
+import android.content.Context
+import android.view.inputmethod.InputMethodManager
+import android.view.View
 import java.io.File
+
+
+
+
+
+
 
 enum class STATUS {
     FEED,
@@ -101,6 +116,39 @@ class MainActivity : AppCompatActivity() {
         val action = supportActionBar
         action?.setDisplayShowCustomEnabled(true)
         action?.setCustomView(R.layout.search_menu)
+
+        val searchInput = findViewById<EditText>(R.id.search_input)
+
+        searchInput.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                if (!searchInput.text.isEmpty()) {
+                    swipeRefreshLayout.isRefreshing = true
+                    prepareSearchList(searchInput.text.toString())
+                }
+                val view = this.currentFocus
+                if (view != null) {
+                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(view.windowToken, 0)
+                }
+                searchInput.clearFocus()
+                return@OnEditorActionListener true
+            }
+            false
+        })
+
+        val cancelSearchButton = findViewById<Button>(R.id.cancel_search_button)
+        cancelSearchButton.setOnClickListener {
+            searchInput.text.clear()
+            swipeRefreshLayout.isRefreshing = true
+            val view = this.currentFocus
+            if (view != null) {
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(view.windowToken, 0)
+            }
+            searchInput.clearFocus()
+            prepareFeedList()
+        }
+
 
         /*
         val textView = findViewById<TextView>(R.id.app_title)
