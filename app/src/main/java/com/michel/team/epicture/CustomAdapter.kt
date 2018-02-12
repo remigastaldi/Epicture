@@ -113,7 +113,7 @@ class CustomAdapter(private val context: Context, private val list: List<Feed>) 
                 }
 
             }
-            
+
             if (!feed.hasAudio) {
                 holder.videoFeedMuted.visibility = ImageView.VISIBLE
             }

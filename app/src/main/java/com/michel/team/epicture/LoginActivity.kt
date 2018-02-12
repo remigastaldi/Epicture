@@ -6,11 +6,8 @@ import android.os.StrictMode
 import android.support.design.widget.TextInputEditText
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.Toast
 import android.graphics.Typeface
-import android.widget.TextView
+import android.widget.*
 import pl.droidsonroids.gif.GifImageView
 
 
@@ -59,8 +56,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun signIn() {
-        val login = findViewById<TextInputEditText>(R.id.login_input)
-        val password = findViewById<TextInputEditText>(R.id.password_input)
+        val login = findViewById<EditText>(R.id.login_input)
+        val password = findViewById<EditText>(R.id.password_input)
         val btn = findViewById<Button>(R.id.signInButton)
         val loading = findViewById<GifImageView>(R.id.loading)
         val btnText = btn.text

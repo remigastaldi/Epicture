@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Camera
 import android.graphics.PorterDuff
 import android.graphics.Typeface
 import android.os.Build
@@ -45,17 +46,21 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         val rView = findViewById<RecyclerView>(R.id.rView)
+        val swipeRefresh = findViewById<SwipeRefreshLayout>(R.id.refresh_layout)
 
         val homeButton = findViewById<ImageView>(R.id.action_bar_home_button)
         homeButton.background.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.MULTIPLY)
         val backButtonHomeButton = findViewById<LinearLayout>(R.id.back_button_action_bar_home_button)
         backButtonHomeButton.setOnClickListener {
+            swipeRefresh.isRefreshing = true
             prepareFeedList()
         }
 
         val backButtonSearchButton = findViewById<LinearLayout>(R.id.back_button_action_bar_search_button)
         backButtonSearchButton.setOnClickListener {
+            swipeRefresh.isRefreshing = true
             randomSearch = true
             changeStatus(status, STATUS.SEARCH)
             val source = "abcdefghijklmnopqrstuvwxyz"
@@ -65,11 +70,13 @@ class MainActivity : AppCompatActivity() {
 
         val backButtonFavoritesButton = findViewById<LinearLayout>(R.id.back_button_action_bar_favorite_button)
         backButtonFavoritesButton.setOnClickListener {
+             swipeRefresh.isRefreshing = true
              prepareFavoritesList()
         }
 
         val backButtonUserProfileButton = findViewById<LinearLayout>(R.id.back_button_action_bar_user_profile_button)
         backButtonUserProfileButton.setOnClickListener {
+            swipeRefresh.isRefreshing = true
             prepareUserFeedList()
         }
 
@@ -163,6 +170,7 @@ class MainActivity : AppCompatActivity() {
         val action = supportActionBar
         action?.setDisplayShowCustomEnabled(true)
         action?.setCustomView(R.layout.search_menu)
+        val swipeRefreshLayout = findViewById<SwipeRefreshLayout>(R.id.refresh_layout)
 
         val searchInput = findViewById<EditText>(R.id.search_input)
         val cancelSearchButton = findViewById<Button>(R.id.cancel_search_button)
@@ -182,6 +190,7 @@ class MainActivity : AppCompatActivity() {
 
         searchInput.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                swipeRefreshLayout.isRefreshing = true
                 if (!searchInput.text.isEmpty()) {
                     randomSearch = false
                     searchString = searchInput.text.toString()
@@ -199,6 +208,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         cancelSearchButton.setOnClickListener {
+            swipeRefreshLayout.isRefreshing = true
             searchInput.text.clear()
             val view = this.currentFocus
             if (view != null) {
