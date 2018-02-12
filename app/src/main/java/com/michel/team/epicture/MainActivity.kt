@@ -22,6 +22,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.KeyEvent
 import android.widget.TextView
 import android.content.Context
+import android.view.Gravity
 import android.view.inputmethod.InputMethodManager
 import android.view.View
 import java.io.File
@@ -118,6 +119,20 @@ class MainActivity : AppCompatActivity() {
         action?.setCustomView(R.layout.search_menu)
 
         val searchInput = findViewById<EditText>(R.id.search_input)
+        val cancelSearchButton = findViewById<Button>(R.id.cancel_search_button)
+        val searchInputForm = findViewById<RelativeLayout>(R.id.search_form)
+
+        searchInputForm.setOnClickListener {
+            searchInput.requestFocus()
+            val lManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            lManager.showSoftInput(searchInput, 0)
+        }
+
+        searchInput.setOnFocusChangeListener { v, hasFocus ->
+            cancelSearchButton.visibility = Button.VISIBLE
+            searchInput.gravity = Gravity.LEFT
+            searchInputForm.gravity = Gravity.LEFT
+        }
 
         searchInput.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -136,7 +151,6 @@ class MainActivity : AppCompatActivity() {
             false
         })
 
-        val cancelSearchButton = findViewById<Button>(R.id.cancel_search_button)
         cancelSearchButton.setOnClickListener {
             searchInput.text.clear()
             swipeRefreshLayout.isRefreshing = true
@@ -147,6 +161,10 @@ class MainActivity : AppCompatActivity() {
             }
             searchInput.clearFocus()
             prepareFeedList()
+            cancelSearchButton.visibility = Button.GONE
+            searchInput.gravity = Gravity.CENTER
+            searchInputForm.gravity = Gravity.CENTER
+
         }
 
 
