@@ -1,10 +1,12 @@
 package com.michel.team.epicture
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.PorterDuff
 import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
 import android.support.v4.content.ContextCompat
@@ -12,25 +14,15 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.Gravity
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import android.widget.TextView
 import org.json.JSONArray
 import org.json.JSONObject
-import android.text.Editable
-import android.text.TextWatcher
-import android.widget.EditText
-import android.view.inputmethod.EditorInfo
-import android.view.KeyEvent
-import android.widget.TextView
-import android.content.Context
-import android.view.Gravity
-import android.view.inputmethod.InputMethodManager
-import android.view.View
 import java.io.File
-
-
-
-
-
+import java.util.*
 
 
 enum class STATUS {
@@ -40,11 +32,14 @@ enum class STATUS {
     FAVORITES,
     PROFILE
 }
+
 class MainActivity : AppCompatActivity() {
     private var instagram = InstagramApiContext.instagram
     private val list = ArrayList<Feed>()
     private var adapter = CustomAdapter(this, list)
     private var status = STATUS.FEED
+    private var searchString = ""
+    private var randomSearch = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -61,7 +56,10 @@ class MainActivity : AppCompatActivity() {
 
         val backButtonSearchButton = findViewById<LinearLayout>(R.id.back_button_action_bar_search_button)
         backButtonSearchButton.setOnClickListener {
-            // prepareSearchList()
+            val source = "abcdefghijklmnopqrstuvwxyz"
+            searchString += source[Math.floor(Math.random() * source.length).toInt()]
+            prepareSearchList(searchString)
+            changeStatus(status, STATUS.SEARCH)
         }
 
         val backButtonFavoritesButton = findViewById<LinearLayout>(R.id.back_button_action_bar_favorite_button)
@@ -97,7 +95,13 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 STATUS.SEARCH -> {
-                    // prepareSearchList()
+                    if (!randomSearch) {
+                        prepareSearchList(searchString)
+                    } else {
+                        val source = "abcdefghijklmnopqrstuvwxyz"
+                        searchString += source[Math.floor(Math.random() * source.length).toInt()]
+                        prepareSearchList(searchString)
+                    }
                 }
 
                 STATUS.ADD -> {
@@ -113,6 +117,45 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        changeMenuBarToHome()
+    }
+
+
+    private fun clearList() {
+        val size = list.size
+        list.clear()
+        adapter.notifyItemRangeRemoved(0, size)
+    }
+
+    override fun onStart() {
+        prepareFeedList()
+        super.onStart()
+    }
+
+    private fun changeMenuBarToHome() {
+        val action = supportActionBar
+        action?.setDisplayShowCustomEnabled(true)
+        action?.setCustomView(R.layout.custom_menu)
+
+        val textView = findViewById<TextView>(R.id.app_title)
+        val typeface = Typeface.createFromAsset(assets, "fonts/Billabong.ttf")
+        textView.typeface = typeface
+
+        // Action Bar handler
+        val view = this.supportActionBar?.customView
+
+        val exitButton = view?.findViewById(R.id.logout_action) as ImageButton
+        exitButton.setOnClickListener({ v ->
+            logoutDialog()
+        })
+
+        val photoButton = view.findViewById(R.id.camera_action) as ImageButton
+        photoButton.setOnClickListener({ v ->
+            Toast.makeText(this,"Camera clicked" , Toast.LENGTH_LONG).show()
+        })
+    }
+
+    private fun changeMenuBarToSearch() {
         // Set Custom Menu
         val action = supportActionBar
         action?.setDisplayShowCustomEnabled(true)
@@ -137,8 +180,9 @@ class MainActivity : AppCompatActivity() {
         searchInput.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 if (!searchInput.text.isEmpty()) {
-                    swipeRefreshLayout.isRefreshing = true
-                    prepareSearchList(searchInput.text.toString())
+                    searchString = searchInput.text.toString()
+                    prepareSearchList(searchString)
+                    randomSearch = false
                 }
                 val view = this.currentFocus
                 if (view != null) {
@@ -153,7 +197,6 @@ class MainActivity : AppCompatActivity() {
 
         cancelSearchButton.setOnClickListener {
             searchInput.text.clear()
-            swipeRefreshLayout.isRefreshing = true
             val view = this.currentFocus
             if (view != null) {
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -166,38 +209,6 @@ class MainActivity : AppCompatActivity() {
             searchInputForm.gravity = Gravity.CENTER
 
         }
-
-
-        /*
-        val textView = findViewById<TextView>(R.id.app_title)
-        val typeface = Typeface.createFromAsset(assets, "fonts/Billabong.ttf")
-        textView.typeface = typeface
-
-        // Action Bar handler
-        val view = this.supportActionBar?.customView
-
-        val exitButton = view?.findViewById(R.id.logout_action) as ImageButton
-        exitButton.setOnClickListener({ v ->
-            logoutDialog()
-        })
-
-        val photoButton = view?.findViewById(R.id.camera_action) as ImageButton
-        photoButton.setOnClickListener({ v ->
-            Toast.makeText(this,"Camera clicked" , Toast.LENGTH_LONG).show()
-        })
-        */
-    }
-
-
-    private fun clearList() {
-        val size = list.size
-        list.clear()
-        adapter.notifyItemRangeRemoved(0, size)
-    }
-
-    override fun onStart() {
-        prepareFeedList()
-        super.onStart()
     }
 
     private fun changeStatus(from: STATUS, to: STATUS) {
@@ -212,7 +223,9 @@ class MainActivity : AppCompatActivity() {
             }
 
             STATUS.SEARCH -> {
+                randomSearch = true
                 searchButton.background.clearColorFilter()
+                changeMenuBarToHome()
             }
 
             STATUS.ADD -> {
@@ -234,6 +247,8 @@ class MainActivity : AppCompatActivity() {
 
             STATUS.SEARCH -> {
                 searchButton.background.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.MULTIPLY)
+                changeMenuBarToSearch()
+                clearList()
             }
 
             STATUS.ADD -> {
@@ -328,9 +343,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun prepareSearchList(param: String) {
-        changeStatus(status, STATUS.SEARCH)
         clearList()
-
         Thread(Runnable {
             val response = instagram?.tagFeed(param)
             val items = response?.jsonObject?.getJSONArray("items") as JSONArray
