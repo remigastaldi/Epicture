@@ -88,6 +88,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 STATUS.FAVORITES -> {
+                    prepareFavoritesList()
                 }
 
                 STATUS.PROFILE -> {
@@ -122,7 +123,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun clearList() {
+    private fun clearList() {
         val size = list.size
         list.clear()
         adapter.notifyItemRangeRemoved(0, size)
