@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView
 import android.widget.*
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.File
 
 enum class STATUS {
     FEED,
@@ -49,7 +50,7 @@ class MainActivity : AppCompatActivity() {
 
         val backButtonFavoritesButton = findViewById<LinearLayout>(R.id.back_button_action_bar_favorite_button)
         backButtonFavoritesButton.setOnClickListener {
-            // prepareFavorites()
+             prepareFavoritesList()
         }
 
         val backButtonUserProfileButton = findViewById<LinearLayout>(R.id.back_button_action_bar_user_profile_button)
@@ -135,6 +136,7 @@ class MainActivity : AppCompatActivity() {
     private fun changeStatus(from: STATUS, to: STATUS) {
         val userProfileButton = findViewById<ImageView>(R.id.action_bar_user_profile_button)
         val homeButton = findViewById<ImageView>(R.id.action_bar_home_button)
+        val favoritesButton = findViewById<ImageView>(R.id.action_bar_favorite_button)
 
         when (from) {
             STATUS.FEED -> {
@@ -149,6 +151,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             STATUS.FAVORITES -> {
+                favoritesButton.background.clearColorFilter()
             }
 
             STATUS.PROFILE -> {
@@ -169,6 +172,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             STATUS.FAVORITES -> {
+                favoritesButton.background.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.MULTIPLY)
             }
 
             STATUS.PROFILE -> {
@@ -181,7 +185,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun addCard(item: JSONObject) {
 
-        val hasLiked = item.getBoolean("has_liked")
+        val hasLiked = if (item.isNull("has_liked")) {
+            true
+        } else {
+            item.getBoolean("has_liked")
+        }
 
         val images = item.get("image_versions2") as JSONObject
         val candidates = images.getJSONArray("candidates")
@@ -298,6 +306,38 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 val item = itemPack.get("media_or_ad") as JSONObject
+
+                addCard(item)
+                i++
+            }
+
+            this.runOnUiThread({
+                val swipeRefreshLayout = findViewById<SwipeRefreshLayout>(R.id.refresh_layout)
+                swipeRefreshLayout.isRefreshing = false
+            })
+        }).start()
+    }
+
+    private fun prepareFavoritesList() {
+        changeStatus(status, STATUS.FAVORITES)
+        clearList()
+
+        Thread(Runnable {
+            val response  = instagram?.selfLikedFeed()
+            val items = response?.jsonObject?.getJSONArray("items") as JSONArray
+
+            File(filesDir,"log.txt").printWriter().use { out ->
+                out.println(response.text)
+            }
+
+            var i = 0
+            while (!items.isNull(i)) {
+                val item = items.get(i) as JSONObject
+
+                if (item.isNull("image_versions2")) {
+                    i++
+                    continue
+                }
 
                 addCard(item)
                 i++

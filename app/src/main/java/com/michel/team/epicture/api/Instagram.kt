@@ -121,7 +121,7 @@ class Instagram(private var context: Context) {
         return Req.prepare(Routes.hashtagsSearch(query, rankToken)).send()
     }
 
-    fun selfLikedFeed(max_id: String): Response {
+    fun selfLikedFeed(): Response {
         return Req.prepare(Routes.selfLikedFeed("")).send()
     }
 }
