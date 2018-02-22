@@ -3,9 +3,7 @@ package com.michel.team.epicture
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Point
-import android.media.AudioManager.AUDIOFOCUS_NONE
 import android.net.Uri
-import android.os.Build
 import android.support.v7.widget.RecyclerView
 import android.text.Html
 import android.view.LayoutInflater

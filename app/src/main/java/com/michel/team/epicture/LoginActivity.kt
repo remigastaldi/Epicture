@@ -3,11 +3,10 @@ package com.michel.team.epicture
 import android.content.Intent
 import android.os.Bundle
 import android.os.StrictMode
-import android.support.design.widget.TextInputEditText
 import android.support.v7.app.AppCompatActivity
-import android.view.View
 import android.graphics.Typeface
 import android.widget.*
+import com.michel.team.epicture.api.Instagram
 import pl.droidsonroids.gif.GifImageView
 
 

@@ -1,4 +1,4 @@
-package com.michel.team.epicture
+package com.michel.team.epicture.api
 
 import java.math.BigInteger
 

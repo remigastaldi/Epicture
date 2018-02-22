@@ -6,6 +6,7 @@ package com.michel.team.epicture
 
 import android.annotation.SuppressLint
 import android.content.Context
+import com.michel.team.epicture.api.Instagram
 
 @SuppressLint("StaticFieldLeak")
 object InstagramApiContext {

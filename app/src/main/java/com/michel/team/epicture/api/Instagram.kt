@@ -1,4 +1,4 @@
-package com.michel.team.epicture
+package com.michel.team.epicture.api
 
 import android.content.Context
 import khttp.responses.Response

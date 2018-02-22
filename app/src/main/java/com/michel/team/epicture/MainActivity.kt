@@ -4,10 +4,8 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Camera
 import android.graphics.PorterDuff
 import android.graphics.Typeface
-import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
 import android.support.v4.content.ContextCompat
