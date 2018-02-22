@@ -10,7 +10,7 @@ What works:
 - Search
 - Random search
 - Favorite's images
-- Profil
+- Profile
 
 <p align="center">
   <img src="readme_media/login.jpg" width="30%" hspace="40"> <img src="readme_media/feed.jpg" width="30%" hspace="40">
