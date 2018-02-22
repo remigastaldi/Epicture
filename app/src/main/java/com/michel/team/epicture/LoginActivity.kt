@@ -61,19 +61,20 @@ class LoginActivity : AppCompatActivity() {
         val btn = findViewById<Button>(R.id.signInButton)
         val loading = findViewById<GifImageView>(R.id.loading)
         val btnText = btn.text
+
+        println("login " + login.text + " & password " + password.text)
+        if (!login.text.isEmpty() && !password.text.isEmpty()) {
+            instagram?.username = login.text.toString()
+            instagram?.password = password.text.toString()
+        } else {
+            Toast.makeText(this, "No login or password provided", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         btn.text = ""
         loading.visibility = GifImageView.VISIBLE
         loading.bringToFront()
 
-        println("login " + login.text + " & password " + password.text);
-        if (login.text.isEmpty() && password.text.isEmpty())
-        {
-            instagram?.username = "epicture42"
-            instagram?.password = "epitech42"
-        } else {
-            instagram?.username = login.text.toString()
-            instagram?.password = password.text.toString()
-        }
         Thread({
             instagram?.prepare()
             if (!instagram!!.isLogin)
