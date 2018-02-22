@@ -1,6 +1,7 @@
 # Epicture
 
-The goal of this one week project was to create an android application and integrate the maximum functionality of imgur, flickr or instagram api.
+The goal of this one week project was to create an android application and integrate the maximum functionality of imgur, flickr or instagram api.  
+
 We choose to create an instagram like.
 
 What works:
